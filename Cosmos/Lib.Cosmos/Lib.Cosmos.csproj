@@ -92,16 +92,14 @@
     <Compile Include="Views\MasterDetailView.xaml.cs">
       <DependentUpon>MasterDetailView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SomeOtherView.xaml.cs">
-      <DependentUpon>SomeOtherView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SomeView.xaml.cs">
-      <DependentUpon>SomeView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Windows\RegionNames.cs" />
-    <Compile Include="Windows\SceneLifetime.cs" />
+    <Compile Include="Windows\SceneControl.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Resources\Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Scenes\Views\BlackHoleView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -111,14 +109,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MasterDetailView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SomeOtherView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
