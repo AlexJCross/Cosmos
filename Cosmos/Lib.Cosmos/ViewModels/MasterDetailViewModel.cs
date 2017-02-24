@@ -12,6 +12,7 @@
         private readonly IRegionManager regionMangager;
         private IScene scene;
         private IScene[] scenes;
+        private WeakReference weakReference;
 
         public MasterDetailViewModel(IRegionManager regionMangager, IScene[] scenes)
         {
@@ -40,33 +41,49 @@
             }
         }
 
+        #region Methods
+
         public void Navigate()
         {
-            var region = this.regionMangager.Regions[RegionNames.DetailRegion];
-
-            // Make sure the view is not already registered
-            if (region.Views.Count() > 1)
-            {
-                throw new AccessViolationException("View already registered. This suggests a memory leak has occured.");
-            }
+            this.ValidateMemoryClearance();
 
             this.regionMangager.RegisterViewWithRegion(RegionNames.DetailRegion, this.scene.ViewType);
-            region.RequestNavigate(scene.ViewType.Name, OnNavigation);
-
+            this.regionMangager.RequestNavigate(RegionNames.DetailRegion, scene.ViewType.Name);
         }
 
-        private void OnNavigation(NavigationResult result)
-        {
-            if (result.Error != null)
-            {
-                throw result.Error;
-            }
 
+        private void ValidateMemoryClearance()
+        {
+            // Reclaim memory while navigating to minimise garbage collection while rendering.
+            // Commenting these lines out should cause the app to error on switching view.
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
+
+            var region = this.regionMangager.Regions[RegionNames.DetailRegion];
+
+            // Make sure that, at most, one view is registered
+            if (region.Views.Count() > 1)
+            {
+                throw new AccessViolationException("Memory leak detected. Region manager is holding a reference to the views.");
+            }
+
+            // We should have a weak reference to the old view. Check that it is dead.
+            if (this.weakReference != null && this.weakReference.IsAlive)
+            {
+                throw new AccessViolationException("Memory leak detected. Previous view still held in memory.");
+            }
+
+            // Now store a reference to the new view for future checks.
+            new Action(() =>
+            {
+                if (region.Views.Any())
+                {
+                    this.weakReference = new WeakReference(region.Views.Single(), true);
+                }
+            })();
         }
+
+#endregion
     }
-
-
 }
