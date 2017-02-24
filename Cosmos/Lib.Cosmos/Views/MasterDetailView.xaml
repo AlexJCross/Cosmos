@@ -22,6 +22,7 @@
 
         <DockPanel Grid.Column="0">
             <Button Content="Hello" DockPanel.Dock="Top" />
+            
             <ListBox x:Name="ListBoxEpisodes"
                      DisplayMemberPath="Name"
                      ItemsSource="{Binding Path=Scenes}"
@@ -29,7 +30,7 @@
         </DockPanel>
 
         <DockPanel Grid.Column="1">
-            <TextBlock DockPanel.Dock="Top" Text="{Binding Path=Scene.Name}" />
+            <Label DockPanel.Dock="Top" Content="{Binding Path=Scene.Name}" />
             <ContentControl prism:RegionManager.RegionName="{x:Static windows:RegionNames.DetailRegion}" />
         </DockPanel>
     </Grid>
