@@ -78,6 +78,9 @@
   <ItemGroup>
     <Compile Include="Animation\AnimationUtil.cs" />
     <Compile Include="Animation\BlackHoleBuilder.cs" />
+    <Compile Include="Animation\CameraActions.cs" />
+    <Compile Include="Animation\CameraActionsExtensions.cs" />
+    <Compile Include="Animation\ICameraActions.cs" />
     <Compile Include="Animation\LinearMatrix2DAnimation.cs" />
     <Compile Include="Animation\LorentzAnimation.cs" />
     <Compile Include="Animation\PolarCoordinateBuilder.cs" />
@@ -85,9 +88,12 @@
     <Compile Include="Converters\PointConverter.cs" />
     <Compile Include="CosmosModule.cs" />
     <Compile Include="CosmosUnityExtension.cs" />
+    <Compile Include="Extensions\CameraActionsExtensions.cs" />
+    <Compile Include="Extensions\ViewportExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenes\Infrastructure\IScene.cs" />
     <Compile Include="Scenes\Infrastructure\Scene.cs" />
+    <Compile Include="Scenes\ViewModels\BlackHoleViewModel.cs" />
     <Compile Include="Scenes\ViewModels\LorentzViewModel.cs" />
     <Compile Include="Scenes\Views\BlackHoleView.xaml.cs">
       <DependentUpon>BlackHoleView.xaml</DependentUpon>
@@ -95,7 +101,14 @@
     <Compile Include="Scenes\Views\LorentzView.xaml.cs">
       <DependentUpon>LorentzView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils\MemoryUtils.cs" />
+    <Compile Include="ViewModels\CameraControlViewModel.cs" />
+    <Compile Include="ViewModels\ICameraControlViewModel.cs" />
+    <Compile Include="ViewModels\ISceneAware.cs" />
     <Compile Include="ViewModels\MasterDetailViewModel.cs" />
+    <Compile Include="Views\CameraControlView.xaml.cs">
+      <DependentUpon>CameraControlView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MasterDetailView.xaml.cs">
       <DependentUpon>MasterDetailView.xaml</DependentUpon>
     </Compile>
@@ -116,6 +129,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\CameraControlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MasterDetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -125,7 +142,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Scenes\Controllers\" />
+    <Folder Include="Scenes\ViewControllers\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Helix\Source\HelixToolkit.Wpf\HelixToolkit.Wpf.csproj">

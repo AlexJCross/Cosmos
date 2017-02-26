@@ -6,6 +6,7 @@
     using System;
     using System.Linq;
     using Windows;
+    using System.Diagnostics;
 
     class MasterDetailViewModel : BindableBase
     {
@@ -43,7 +44,7 @@
 
         #region Methods
 
-        public void Navigate()
+        private void Navigate()
         {
             this.ValidateMemoryClearance();
 
@@ -51,11 +52,16 @@
             this.regionMangager.RequestNavigate(RegionNames.DetailRegion, scene.ViewType.Name);
         }
 
-
         private void ValidateMemoryClearance()
         {
             // Reclaim memory while navigating to minimise garbage collection while rendering.
             // Commenting these lines out should cause the app to error on switching view.
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
@@ -71,6 +77,7 @@
             // We should have a weak reference to the old view. Check that it is dead.
             if (this.weakReference != null && this.weakReference.IsAlive)
             {
+                Debug.Print("Memory not reclaimed");
                 throw new AccessViolationException("Memory leak detected. Previous view still held in memory.");
             }
 
@@ -84,6 +91,6 @@
             })();
         }
 
-#endregion
+        #endregion
     }
 }

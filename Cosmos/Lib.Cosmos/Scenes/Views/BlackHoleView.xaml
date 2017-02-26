@@ -1,15 +1,120 @@
 ﻿<UserControl x:Class="Lib.Cosmos.Scenes.Views.BlackHoleView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:views="clr-namespace:Lib.Cosmos.Views"
+             xmlns:vms="clr-namespace:Lib.Cosmos.Scenes.ViewModels"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Lib.Cosmos.Scenes.Views"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+             xmlns:ht="http://helix-toolkit.org/wpf"
+             xmlns:converters="clr-namespace:Lib.Cosmos.Converters"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DataContext="{d:DesignInstance Type=vms:BlackHoleViewModel}"
              d:DesignHeight="300"
              d:DesignWidth="300"
              mc:Ignorable="d">
+    <UserControl.Resources>
+
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Resources/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <converters:PointConverter x:Key="PointConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <Grid>
-        <Button Content="grrr" />
+        <DockPanel>
+            
+            
+            <!--  Buttons for testing animations  -->
+            <StackPanel MinWidth="100"
+                        Margin="10"
+                        DockPanel.Dock="Left">
+
+                <views:CameraControlView DataContext="{Binding Path=CameraViewModel}"/>
+
+                <Button Click="EnterBlackHole" Content="Enter Black Hole" />
+
+                <CheckBox x:Name="CheckBlackHole" Content="Show Black Hole" />
+
+            </StackPanel>
+
+            <ht:HelixViewport3D x:Name="MyViewPort"
+                                Grid.Column="1"
+                                Background="{ht:LinearGradientBrush White,
+                                                                    AliceBlue}"
+                                IsHitTestVisible="True"
+                                ShowCameraInfo="True">
+
+                <!--  TODO What is the foreground for  -->
+                <ht:HelixViewport3D.Foreground>
+                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                        <GradientStop Offset="0" Color="Black" />
+                        <GradientStop Offset="1" Color="White" />
+                    </LinearGradientBrush>
+                </ht:HelixViewport3D.Foreground>
+
+                <ht:HelixViewport3D.Camera>
+                    <PerspectiveCamera x:Name="MyCamera"
+                                       FieldOfView="60"
+                                       LookDirection="0 0 -130"
+                                       Position="0 0 130"
+                                       UpDirection="0 1 0" />
+                </ht:HelixViewport3D.Camera>
+
+                <ht:HelixViewport3D.DefaultCamera>
+                    <PerspectiveCamera x:Name="MyDefaultCamera"
+                                       FieldOfView="60"
+                                       LookDirection="0 0 -130"
+                                       Position="0 0 130"
+                                       UpDirection="0 1 0" />
+                </ht:HelixViewport3D.DefaultCamera>
+
+                <ht:SunLight x:Name="MyLight"
+                             po:Freeze="True"
+                             Altitude="-90"
+                             Ambient="0.9"
+                             Brightness="0.5"
+                             ShowLights="False" />
+
+                <ht:SunLight x:Name="MyLight2"
+                             po:Freeze="True"
+                             Altitude="90"
+                             Ambient="0.9"
+                             Brightness="0.5"
+                             ShowLights="False" />
+
+                <ht:ArrowVisual3D x:Name="arrow1"
+                                  Diameter="0.8"
+                                  Material="{ht:Material {StaticResource Kuler3},
+                                                         SpecularIntensity=0.10}"
+                                  Origin="00 10 0"
+                                  Point1="10 00 0"
+                                  Point2="30 10 0"
+                                  ThetaDiv="10" />
+
+                <ht:ArrowVisual3D x:Name="arrow2"
+                                  Diameter="0.8"
+                                  Material="{ht:Material {StaticResource Kuler4},
+                                                         SpecularIntensity=0.10}"
+                                  Origin="00 10 0"
+                                  Point1="00 10 0"
+                                  Point2="10 30 0"
+                                  ThetaDiv="10" />
+
+                <ht:ArrowVisual3D x:Name="arrow4"
+                                  Diameter="0.8"
+                                  Material="{ht:Material {StaticResource Kuler2}, SpecularIntensity=0.10}"
+                                  Origin="00 10 0"
+                                  Point1="0 10 0"
+                                  Point2="0 30 0"
+                                  ThetaDiv="10" />
+
+                <ModelVisual3D x:Name="MyBlackHole" />
+            </ht:HelixViewport3D>
+        </DockPanel>
     </Grid>
 </UserControl>

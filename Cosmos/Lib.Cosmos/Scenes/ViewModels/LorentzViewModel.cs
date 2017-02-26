@@ -1,12 +1,18 @@
 ﻿namespace Lib.Cosmos.Scenes.ViewModels
 {
-    using System;
+    using Cosmos.ViewModels;
+    using Utils;
 
-    public class LorentzViewModel
+    public class LorentzViewModel : SceneAwareBase
     {
         public LorentzViewModel()
         {
-            Console.WriteLine("test");
+            MemoryUtils.LogCtor<LorentzViewModel>();
+        }
+
+        ~LorentzViewModel()
+        {
+            MemoryUtils.LogGc<LorentzViewModel>();
         }
     }
 }

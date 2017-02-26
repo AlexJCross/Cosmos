@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="Lib.Cosmos.Views.CameraControlView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Lib.Cosmos.Views"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vms="clr-namespace:Lib.Cosmos.ViewModels"
+             d:DataContext="{d:DesignInstance Type=vms:CameraControlViewModel}"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             mc:Ignorable="d">
+    <Grid>
+        <GroupBox Header="Camera Controls">
+            <StackPanel MinWidth="100" Margin="10">
+                <Button Command="{Binding Path=SnapZoomInCommand}" Content="Snap down" />
+                <Button Command="{Binding Path=ZoomInCommand}" Content="Move down" />
+                <Button Command="{Binding Path=SnapResetCommand}" Content="Snap reset" />
+                <Button Command="{Binding Path=MoveSideCommand}" Content="Move Side" />
+                <Button Command="{Binding Path=OrbitCommand}" Content="Move Orbit" />
+            </StackPanel>
+        </GroupBox>
+    </Grid>
+</UserControl>
