@@ -79,7 +79,6 @@
     <Compile Include="Animation\AnimationUtil.cs" />
     <Compile Include="Animation\BlackHoleBuilder.cs" />
     <Compile Include="Animation\CameraActions.cs" />
-    <Compile Include="Animation\CameraActionsExtensions.cs" />
     <Compile Include="Animation\ICameraActions.cs" />
     <Compile Include="Animation\LinearMatrix2DAnimation.cs" />
     <Compile Include="Animation\LorentzAnimation.cs" />
@@ -90,9 +89,13 @@
     <Compile Include="CosmosUnityExtension.cs" />
     <Compile Include="Extensions\CameraActionsExtensions.cs" />
     <Compile Include="Extensions\ViewportExtensions.cs" />
+    <Compile Include="Extensions\Visual3DCollectionExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenes\Infrastructure\IScene.cs" />
+    <Compile Include="Scenes\Infrastructure\ISceneClip.cs" />
     <Compile Include="Scenes\Infrastructure\Scene.cs" />
+    <Compile Include="Scenes\Infrastructure\SceneClip.cs" />
+    <Compile Include="Scenes\Infrastructure\ToggleSceneClip.cs" />
     <Compile Include="Scenes\ViewModels\BlackHoleViewModel.cs" />
     <Compile Include="Scenes\ViewModels\LorentzViewModel.cs" />
     <Compile Include="Scenes\Views\BlackHoleView.xaml.cs">
@@ -111,6 +114,9 @@
     </Compile>
     <Compile Include="Views\MasterDetailView.xaml.cs">
       <DependentUpon>MasterDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SceneClipsControl.xaml.cs">
+      <DependentUpon>SceneClipsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Visual3Ds\FlatArrowVisual3D.cs" />
     <Compile Include="Windows\RegionNames.cs" />
@@ -134,6 +140,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MasterDetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SceneClipsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

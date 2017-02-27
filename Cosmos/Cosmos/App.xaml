@@ -4,7 +4,6 @@
              xmlns:local="clr-namespace:Cosmos">
 
     <Application.Resources>
-
         <!--
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

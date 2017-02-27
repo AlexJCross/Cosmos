@@ -3,15 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:Lib.Cosmos.Converters"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ht="http://helix-toolkit.org/wpf"
+             xmlns:infra="clr-namespace:Lib.Cosmos.Scenes.Infrastructure"
              xmlns:local="clr-namespace:Lib.Cosmos.Scenes.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
-             xmlns:ht="http://helix-toolkit.org/wpf"
              xmlns:prism="http://prismlibrary.com/"
-             d:DesignHeight="300"
              xmlns:views="clr-namespace:Lib.Cosmos.Views"
              xmlns:vms="clr-namespace:Lib.Cosmos.Scenes.ViewModels"
              d:DataContext="{d:DesignInstance Type=vms:LorentzViewModel}"
+             d:DesignHeight="300"
              d:DesignWidth="300"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d">
@@ -23,122 +24,24 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-
+    
     <Grid>
         <DockPanel>
             <!--  Buttons for testing animations  -->
-            <StackPanel MinWidth="100"
-                        Margin="10"
-                        DockPanel.Dock="Left">
-                <views:CameraControlView DataContext="{Binding Path=CameraViewModel}"/>
-
-                <GroupBox Header="Scene Clips" >
-                    <ItemsControl Margin="10" ItemsSource="{Binding Path=SceneClips}">
-                        <ItemsControl.Resources>
-
-                            <Style x:Key="AnimatedSwitch" TargetType="{x:Type ToggleButton}">
-                                <Setter Property="Foreground" Value="Black" />
-                                <Setter Property="Background" Value="#FAFAFB" />
-                                <Setter Property="BorderBrush" Value="#EAEAEB" />
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="ToggleButton">
-                                            <DockPanel>
-                                                
-                                            <Viewbox Stretch="Uniform" DockPanel.Dock="Left">
-                                                <Canvas Name="Layer_1" Width="40" Height="20" Canvas.Left="10" Canvas.Top="0">
-                                                    <Ellipse  Canvas.Left="0" Width="20" Height="20" Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="0.5"/>
-                                                    <Ellipse  Canvas.Left="15" Width="20" Height="20" Fill="{TemplateBinding Background}" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="0.5"/>
-                                                    <Border Canvas.Left="10" Width="15" Height="20" Name="rect416927" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0,0.5,0,0.5"/>
-                                                    <Ellipse x:Name="ellipse"  Canvas.Left="0" Width="20" Height="20" Fill="White" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="0.3">
-                                                        <Ellipse.RenderTransform>
-                                                            <TranslateTransform X="0" Y="0" />
-                                                        </Ellipse.RenderTransform>
-                                                        <Ellipse.BitmapEffect>
-                                                            <DropShadowBitmapEffect Softness="0.1" ShadowDepth="0.7" Direction="270" Color="#BBBBBB"/>
-                                                        </Ellipse.BitmapEffect>
-                                                    </Ellipse>
-                                                </Canvas>
-                                            </Viewbox>
-                                                <TextBlock Text="{TemplateBinding Content}" VerticalAlignment="Center"/>
-                                            </DockPanel>
-
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsChecked" Value="True" >
-                                                    <Trigger.EnterActions>
-                                                        <BeginStoryboard>
-                                                            <Storyboard>
-                                                                <ColorAnimation Storyboard.TargetProperty="Background.Color" To="#52D468" Duration="0:0:0.2" />
-                                                                <ColorAnimation Storyboard.TargetProperty="BorderBrush.Color" To="#41C955" Duration="0:0:0.2" />
-                                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Ellipse.RenderTransform).(TranslateTransform.X)" Storyboard.TargetName="ellipse">
-                                                                    <SplineDoubleKeyFrame KeyTime="0" Value="0"/>
-                                                                    <SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="15" KeySpline="0, 1, 0.6, 1"/>
-                                                                </DoubleAnimationUsingKeyFrames>
-                                                            </Storyboard>
-                                                        </BeginStoryboard>
-                                                    </Trigger.EnterActions>
-                                                    <Trigger.ExitActions>
-                                                        <BeginStoryboard>
-                                                            <Storyboard>
-                                                                <ColorAnimation Storyboard.TargetProperty="Background.Color" To="#FAFAFB" Duration="0:0:0.2" />
-                                                                <ColorAnimation Storyboard.TargetProperty="BorderBrush.Color" To="#EAEAEB" Duration="0:0:0.2" />
-                                                                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Ellipse.RenderTransform).(TranslateTransform.X)" Storyboard.TargetName="ellipse">
-                                                                    <SplineDoubleKeyFrame KeyTime="0" Value="15"/>
-                                                                    <SplineDoubleKeyFrame KeyTime="0:0:0.3" Value="0" KeySpline="0, 0.5, 0.5, 1"/>
-                                                                </DoubleAnimationUsingKeyFrames>
-                                                            </Storyboard>
-                                                        </BeginStoryboard>
-                                                    </Trigger.ExitActions>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-
-                            <DataTemplate DataType="{x:Type local:SceneClip}">
-                                <Button Content="{Binding Path=Text}" Command="{Binding Path=Command}" Margin="0,0,5,5" />
-                            </DataTemplate>
-
-                            <DataTemplate DataType="{x:Type local:ToggleSceneClip}">
-                                <ToggleButton Height="15" Style="{StaticResource AnimatedSwitch}" Content="{Binding Path=Text}" IsChecked="{Binding Path=Value, Mode=TwoWay}" Margin="0,0,5,5" />
-                            </DataTemplate>
-                        </ItemsControl.Resources>
-                        
-                    </ItemsControl>
-                </GroupBox>
+            <StackPanel MinWidth="100" Margin="10" DockPanel.Dock="Left">
+                <views:CameraControlView DataContext="{Binding Path=CameraViewModel}" />
+                <views:SceneClipsControl SceneClips="{Binding Path=SceneClips}" />
             </StackPanel>
 
-            <ht:HelixViewport3D x:Name="MyViewPort"
-                                Grid.Column="1"
-                                Background="{ht:LinearGradientBrush White,
-                                                                    White}"
-                                IsHitTestVisible="True"
-                                ShowCameraInfo="True">
+            <ht:HelixViewport3D x:Name="MyViewPort" Grid.Column="1">
 
-                <!--  TODO What is the foreground for  -->
-                <ht:HelixViewport3D.Foreground>
-                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                        <GradientStop Offset="0" Color="Black" />
-                        <GradientStop Offset="1" Color="White" />
-                    </LinearGradientBrush>
-                </ht:HelixViewport3D.Foreground>
-
-                <ht:HelixViewport3D.Camera>
+                <ht:HelixViewport3D.Camera >
                     <PerspectiveCamera x:Name="MyCamera"
                                        FieldOfView="60"
                                        LookDirection="0 0 -130"
                                        Position="0 0 130"
                                        UpDirection="0 1 0" />
                 </ht:HelixViewport3D.Camera>
-
-                <ht:HelixViewport3D.DefaultCamera>
-                    <PerspectiveCamera x:Name="MyDefaultCamera"
-                                       FieldOfView="60"
-                                       LookDirection="0 0 -130"
-                                       Position="0 0 130"
-                                       UpDirection="0 1 0" />
-                </ht:HelixViewport3D.DefaultCamera>
 
                 <ht:SunLight x:Name="MyLight"
                              po:Freeze="True"
@@ -154,18 +57,20 @@
                              Brightness="0.5"
                              ShowLights="False" />
 
-                <ht:GridLinesVisual3D Width="250"
-                                      Length="250"
-                                      x:Name="MinorGrid"
-                                      Material="{ht:Material LightGray, SpecularIntensity=1.00}"
-                                      MinorDistance="5"
-                                      Visible="{Binding ElementName=CheckMinorGrid, Path=IsChecked}" />
-
-                <ht:GridLinesVisual3D 
+                <ht:GridLinesVisual3D x:Name="MinorGrid"
                                       Width="250"
                                       Length="250"
-                                      x:Name="MajorGrid"
-                                      Material="{ht:Material Gray, SpecularIntensity=1.00}"
+                                      Material="{ht:Material LightGray,
+                                                             SpecularIntensity=1.00}"
+                                      MinorDistance="5"
+                                      Visible="{Binding ElementName=CheckMinorGrid,
+                                                        Path=IsChecked}" />
+
+                <ht:GridLinesVisual3D x:Name="MajorGrid"
+                                      Width="250"
+                                      Length="250"
+                                      Material="{ht:Material Gray,
+                                                             SpecularIntensity=1.00}"
                                       MinorDistance="5"
                                       Visible="{Binding ElementName=CheckMainGrid,
                                                         Path=IsChecked}" />
@@ -174,10 +79,10 @@
                                   Thickness="1.5"
                                   Color="DarkCyan" />
 
-
                 <ht:ArrowVisual3D x:Name="arrow1"
                                   Diameter="0.8"
-                                  Material="{ht:Material {StaticResource Kuler3}, SpecularIntensity=0.10}"
+                                  Material="{ht:Material {StaticResource Kuler3},
+                                                         SpecularIntensity=0.10}"
                                   Origin="00 10 0"
                                   Point1="10 00 0"
                                   Point2="30 10 0"
@@ -205,7 +110,8 @@
 
                 <ht:ArrowVisual3D x:Name="PhotonMinus"
                                   Diameter="0.5"
-                                  Material="{ht:Material {StaticResource Kuler5}, SpecularIntensity=0.10}"
+                                  Material="{ht:Material {StaticResource Kuler5},
+                                                         SpecularIntensity=0.10}"
                                   Origin="00 10 0"
                                   Point1="-100 100 0"
                                   Point2="100 -100 0"
@@ -215,14 +121,15 @@
 
                 <ht:ArrowVisual3D x:Name="arrow4"
                                   Diameter="0.8"
-                                  Material="{ht:Material {StaticResource Kuler2}, SpecularIntensity=0.10}"
+                                  Material="{ht:Material {StaticResource Kuler2},
+                                                         SpecularIntensity=0.10}"
                                   Origin="00 10 0"
                                   Point1="0 10 0"
                                   Point2="0 30 0"
                                   ThetaDiv="10" />
 
-                <ht:SphereVisual3D Center="0 0 0"
-                                   x:Name="SphereFill"
+                <ht:SphereVisual3D x:Name="SphereFill"
+                                   Center="0 0 0"
                                    Fill="White"
                                    Radius="19.9"
                                    Visible="{Binding ElementName=CheckSphereFill,

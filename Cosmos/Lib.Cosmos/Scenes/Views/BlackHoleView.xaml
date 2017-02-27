@@ -30,32 +30,13 @@
             
             
             <!--  Buttons for testing animations  -->
-            <StackPanel MinWidth="100"
-                        Margin="10"
-                        DockPanel.Dock="Left">
-
+            <StackPanel MinWidth="100" Margin="10" DockPanel.Dock="Left">
                 <views:CameraControlView DataContext="{Binding Path=CameraViewModel}"/>
-
-                <Button Click="EnterBlackHole" Content="Enter Black Hole" />
-
-                <CheckBox x:Name="CheckBlackHole" Content="Show Black Hole" />
-
+                <views:SceneClipsControl SceneClips="{Binding Path=SceneClips}" />
             </StackPanel>
 
             <ht:HelixViewport3D x:Name="MyViewPort"
-                                Grid.Column="1"
-                                Background="{ht:LinearGradientBrush White,
-                                                                    AliceBlue}"
-                                IsHitTestVisible="True"
-                                ShowCameraInfo="True">
-
-                <!--  TODO What is the foreground for  -->
-                <ht:HelixViewport3D.Foreground>
-                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                        <GradientStop Offset="0" Color="Black" />
-                        <GradientStop Offset="1" Color="White" />
-                    </LinearGradientBrush>
-                </ht:HelixViewport3D.Foreground>
+                                Grid.Column="1">
 
                 <ht:HelixViewport3D.Camera>
                     <PerspectiveCamera x:Name="MyCamera"
@@ -64,14 +45,6 @@
                                        Position="0 0 130"
                                        UpDirection="0 1 0" />
                 </ht:HelixViewport3D.Camera>
-
-                <ht:HelixViewport3D.DefaultCamera>
-                    <PerspectiveCamera x:Name="MyDefaultCamera"
-                                       FieldOfView="60"
-                                       LookDirection="0 0 -130"
-                                       Position="0 0 130"
-                                       UpDirection="0 1 0" />
-                </ht:HelixViewport3D.DefaultCamera>
 
                 <ht:SunLight x:Name="MyLight"
                              po:Freeze="True"
@@ -89,8 +62,7 @@
 
                 <ht:ArrowVisual3D x:Name="arrow1"
                                   Diameter="0.8"
-                                  Material="{ht:Material {StaticResource Kuler3},
-                                                         SpecularIntensity=0.10}"
+                                  Material="{ht:Material {StaticResource ResourceKey=Kuler3}, SpecularIntensity=0.10}"
                                   Origin="00 10 0"
                                   Point1="10 00 0"
                                   Point2="30 10 0"

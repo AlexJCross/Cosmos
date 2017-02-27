@@ -4,6 +4,7 @@
     using Prism.Mvvm;
     using Scenes.Views;
     using System.Collections.Generic;
+    using Scenes.Infrastructure;
 
     public interface ISceneAware : INavigationAware
     {

@@ -1,10 +1,40 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ht="http://helix-toolkit.org/wpf">
 
+    <!--  Colors  -->
     <Color x:Key="Kuler1">#000000</Color>
     <Color x:Key="Kuler2">#333333</Color>
     <Color x:Key="Kuler3">#FF358B</Color>
     <Color x:Key="Kuler4">#01B0F0</Color>
     <Color x:Key="Kuler5">#AEEE00</Color>
+
+    <!--  Helix Viewport  -->
+    <Style TargetType="{x:Type ht:HelixViewport3D}">
+        <Setter Property="IsHitTestVisible" Value="True" />
+        <Setter Property="ShowCameraInfo" Value="True" />
+
+        <!--<Setter Property="Background" Value="{ht:LinearGradientBrush White, Green}" />-->
+        <Setter Property="Background" Value="White" />
+
+        <Setter Property="Foreground">
+            <Setter.Value>
+                <!--  TODO What is the foreground for  -->
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Offset="0" Color="Black" />
+                    <GradientStop Offset="1" Color="White" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="DefaultCamera">
+            <Setter.Value>
+                <PerspectiveCamera FieldOfView="60"
+                                   LookDirection="0 0 -130"
+                                   Position="0 0 130"
+                                   UpDirection="0 1 0" />
+            </Setter.Value>
+        </Setter>
+    </Style>
 
 </ResourceDictionary>

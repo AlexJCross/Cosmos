@@ -7,75 +7,11 @@
     using System;
     using System.Collections.Generic;
     using System.Windows;
-    using System.Windows.Controls;
     using System.Windows.Media.Animation;
     using System.Windows.Media.Media3D;
     using Cosmos.ViewModels;
     using Extensions;
-    using Prism.Commands;
-    using System.Windows.Input;
-    using Prism.Mvvm;
-
-    public interface ISceneClip
-    {
-        string Text { get; }
-    }
-
-    public class ToggleSceneClip : BindableBase, ISceneClip
-    {
-        private readonly Action<bool> action;
-        private readonly string falseText;
-        private readonly string trueText;
-
-        private string text;
-        private bool value = true;
-
-        public ToggleSceneClip(string trueText, string falseText, Action<bool> action)
-        {
-            this.trueText = trueText;
-            this.falseText = falseText;
-            this.action = action;
-            this.Value = false;
-        }
-
-        public string Text
-        {
-            get { return this.text; }
-            set { this.SetProperty(ref this.text, value); }
-        }
-
-        public bool Value
-        {
-            get
-            {
-                return this.value;
-            }
-
-            set
-            {
-                bool hasChanged = this.SetProperty(ref this.value, value);
-                this.Text = value ? this.trueText : this.falseText;
-
-                if (hasChanged)
-                {
-                    this.action(value);
-                }
-            }
-        }
-    }
-
-    public class SceneClip : ISceneClip
-    {
-        public SceneClip(string text, Action clip)
-        {
-            this.Text = text;
-            this.Command = new DelegateCommand(clip);
-        }
-
-        public string Text { get; }
-
-        public ICommand Command { get; }
-    }
+    using Infrastructure;
 
     public class LorentzViewController
     {
@@ -122,23 +58,6 @@
                 MinorDistance = 1,
                 Material = this.view.MajorGrid.Material
             };
-
-            /*
-            <ht:SunLight x:Name="MyLight"
-                                     Altitude="-90"
-                                     Ambient="0.9"
-                                     Brightness="0.5"
-                                     ShowLights="False" />
-            
-
-            var sunLight = new SunLight
-            {
-                Altitude = 90,
-                Ambient = 0.9,
-                Brightness = 0.5,
-                ShowLights = false,
-            };
-            */
 
             tangentPlane.Model.Geometry.Freeze();
             tangentPlane.Model.Material.Freeze();
@@ -363,13 +282,13 @@
 
         public IList<ISceneClip> CreateSceneClips()
         {
-            var togglePolars = new ToggleSceneClip("Polars", "Polars", this.TogglePolars);
-            var toggleSphericalMesh = new ToggleSceneClip("Sphere", "Sphere", this.ToggleSphericalMesh);
-            var toggleSphereFill = new ToggleSceneClip("Sphere fill", "Sphere fill", b => this.view.SphereFill.Visible = b);
+            var togglePolars = new ToggleSceneClip("Polars", this.TogglePolars);
+            var toggleSphericalMesh = new ToggleSceneClip("Sphere", this.ToggleSphericalMesh);
+            var toggleSphereFill = new ToggleSceneClip("Sphere fill", b => this.view.SphereFill.Visible = b);
 
-            var toggleMajorGrid = new ToggleSceneClip("Major Grid", "Major Grid", b => this.view.MajorGrid.Visible = b);
-            var toggleMinorGrid = new ToggleSceneClip("Minor Grid", "Minor Grid", b => this.view.MinorGrid.Visible = b);
-            var togglePhotonLines = new ToggleSceneClip("Photon lines", "Photon lines", b => 
+            var toggleMajorGrid = new ToggleSceneClip("Major Grid", b => this.view.MajorGrid.Visible = b);
+            var toggleMinorGrid = new ToggleSceneClip("Minor Grid", b => this.view.MinorGrid.Visible = b);
+            var togglePhotonLines = new ToggleSceneClip("Photon lines", b => 
                 {
                     this.view.PhotonPlus.Visible = b;
                     this.view.PhotonMinus.Visible = b;
