@@ -10,6 +10,7 @@
              xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:views="clr-namespace:Lib.Cosmos.Views"
+             xmlns:visuals="clr-namespace:Lib.Cosmos.Visual3Ds"
              xmlns:vms="clr-namespace:Lib.Cosmos.Scenes.ViewModels"
              d:DataContext="{d:DesignInstance Type=vms:LorentzViewModel}"
              d:DesignHeight="300"
@@ -24,123 +25,101 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    
-    <Grid>
-        <DockPanel>
-            <!--  Buttons for testing animations  -->
-            <StackPanel MinWidth="100" Margin="10" DockPanel.Dock="Left">
-                <views:CameraControlView DataContext="{Binding Path=CameraViewModel}" />
-                <views:SceneClipsControl SceneClips="{Binding Path=SceneClips}" />
-            </StackPanel>
 
-            <ht:HelixViewport3D x:Name="MyViewPort" Grid.Column="1">
+    <DockPanel>
+        <!--  Buttons for testing animations  -->
+        <StackPanel MinWidth="100" Margin="10">
+            <views:CameraControlView DataContext="{Binding Path=CameraViewModel}" />
+            <views:SceneClipsControl SceneClips="{Binding Path=SceneClips}" />
+        </StackPanel>
 
-                <ht:HelixViewport3D.Camera >
-                    <PerspectiveCamera x:Name="MyCamera"
-                                       FieldOfView="60"
-                                       LookDirection="0 0 -130"
-                                       Position="0 0 130"
-                                       UpDirection="0 1 0" />
-                </ht:HelixViewport3D.Camera>
+        <ht:HelixViewport3D x:Name="MyViewPort" Grid.Column="1">
 
-                <ht:SunLight x:Name="MyLight"
-                             po:Freeze="True"
-                             Altitude="-90"
-                             Ambient="0.9"
-                             Brightness="0.5"
-                             ShowLights="False" />
+            <ht:HelixViewport3D.Camera>
+                <PerspectiveCamera x:Name="MyCamera"
+                                   FieldOfView="60"
+                                   LookDirection="0 0 -130"
+                                   Position="0 0 130"
+                                   UpDirection="0 1 0" />
+            </ht:HelixViewport3D.Camera>
 
-                <ht:SunLight x:Name="MyLight2"
-                             po:Freeze="True"
-                             Altitude="90"
-                             Ambient="0.9"
-                             Brightness="0.5"
-                             ShowLights="False" />
+            <ht:SunLight x:Name="MyLight"
+                         po:Freeze="True"
+                         Altitude="-90"
+                         Ambient="0.9"
+                         Brightness="0.5"
+                         ShowLights="False" />
 
-                <ht:GridLinesVisual3D x:Name="MinorGrid"
-                                      Width="250"
-                                      Length="250"
-                                      Material="{ht:Material LightGray,
-                                                             SpecularIntensity=1.00}"
-                                      MinorDistance="5"
-                                      Visible="{Binding ElementName=CheckMinorGrid,
-                                                        Path=IsChecked}" />
+            <ht:SunLight x:Name="MyLight2"
+                         po:Freeze="True"
+                         Altitude="90"
+                         Ambient="0.9"
+                         Brightness="0.5"
+                         ShowLights="False" />
 
-                <ht:GridLinesVisual3D x:Name="MajorGrid"
-                                      Width="250"
-                                      Length="250"
-                                      Material="{ht:Material Gray,
-                                                             SpecularIntensity=1.00}"
-                                      MinorDistance="5"
-                                      Visible="{Binding ElementName=CheckMainGrid,
-                                                        Path=IsChecked}" />
-
-                <ht:LinesVisual3D x:Name="PolarLines"
-                                  Thickness="1.5"
-                                  Color="DarkCyan" />
-
-                <ht:ArrowVisual3D x:Name="arrow1"
-                                  Diameter="0.8"
-                                  Material="{ht:Material {StaticResource Kuler3},
-                                                         SpecularIntensity=0.10}"
-                                  Origin="00 10 0"
-                                  Point1="10 00 0"
-                                  Point2="30 10 0"
-                                  ThetaDiv="10" />
-
-                <ht:ArrowVisual3D x:Name="arrow2"
-                                  Diameter="0.8"
-                                  Material="{ht:Material {StaticResource Kuler4},
-                                                         SpecularIntensity=0.10}"
-                                  Origin="00 10 0"
-                                  Point1="00 10 0"
-                                  Point2="10 30 0"
-                                  ThetaDiv="10" />
-
-                <ht:ArrowVisual3D x:Name="PhotonPlus"
-                                  Diameter="0.5"
-                                  Material="{ht:Material {StaticResource Kuler5},
-                                                         SpecularIntensity=0.10}"
-                                  Origin="00 10 0"
-                                  Point1="-100 -100 0"
-                                  Point2="100 100 0"
-                                  ThetaDiv="10"
-                                  Visible="{Binding ElementName=CheckPhotonLine,
+            <ht:GridLinesVisual3D x:Name="MinorGrid"
+                                  Width="250"
+                                  Length="250"
+                                  Material="{ht:Material LightGray,
+                                                         SpecularIntensity=1.00}"
+                                  MinorDistance="5"
+                                  Visible="{Binding ElementName=CheckMinorGrid,
                                                     Path=IsChecked}" />
 
-                <ht:ArrowVisual3D x:Name="PhotonMinus"
-                                  Diameter="0.5"
-                                  Material="{ht:Material {StaticResource Kuler5},
-                                                         SpecularIntensity=0.10}"
-                                  Origin="00 10 0"
-                                  Point1="-100 100 0"
-                                  Point2="100 -100 0"
-                                  ThetaDiv="10"
-                                  Visible="{Binding ElementName=CheckPhotonLine,
+            <ht:GridLinesVisual3D x:Name="MajorGrid"
+                                  Width="250"
+                                  Length="250"
+                                  Material="{ht:Material Gray,
+                                                         SpecularIntensity=1.00}"
+                                  MinorDistance="5"
+                                  Visible="{Binding ElementName=CheckMainGrid,
                                                     Path=IsChecked}" />
 
-                <ht:ArrowVisual3D x:Name="arrow4"
-                                  Diameter="0.8"
-                                  Material="{ht:Material {StaticResource Kuler2},
-                                                         SpecularIntensity=0.10}"
-                                  Origin="00 10 0"
-                                  Point1="0 10 0"
-                                  Point2="0 30 0"
-                                  ThetaDiv="10" />
+            <ht:LinesVisual3D x:Name="PolarLines"
+                              Thickness="1.5"
+                              Color="DarkCyan" />
 
-                <ht:SphereVisual3D x:Name="SphereFill"
-                                   Center="0 0 0"
-                                   Fill="White"
-                                   Radius="19.9"
-                                   Visible="{Binding ElementName=CheckSphereFill,
-                                                     Path=IsChecked}" />
+            <ht:ArrowVisual3D x:Name="arrow1"
+                              Diameter="0.8"
+                              Material="{ht:Material {StaticResource ResourceKey=Kuler3},
+                                                     SpecularIntensity=0.10}"
+                              Origin="00 10 0"
+                              Point1="10 00 0"
+                              Point2="30 10 0"
+                              ThetaDiv="10" />
 
-                <ht:TubeVisual3D x:Name="MyTube" Fill="DarkCyan" />
+            <ht:ArrowVisual3D x:Name="arrow2"
+                              Diameter="0.8"
+                              Material="{ht:Material {StaticResource Kuler4},
+                                                     SpecularIntensity=0.10}"
+                              Origin="00 10 0"
+                              Point1="00 10 0"
+                              Point2="10 30 0"
+                              ThetaDiv="10" />
 
-                <ModelVisual3D x:Name="MySphericals" />
+            <visuals:LightConeVisual3D x:Name="PhotonLines" Material="{ht:Material {StaticResource Kuler5}, SpecularIntensity=0.10}" />
 
-                <ModelVisual3D x:Name="TangentSpace" />
-            </ht:HelixViewport3D>
-        </DockPanel>
-    </Grid>
+            <ht:ArrowVisual3D x:Name="arrow4"
+                              Diameter="0.8"
+                              Material="{ht:Material {StaticResource Kuler2},
+                                                     SpecularIntensity=0.10}"
+                              Origin="00 10 0"
+                              Point1="0 10 0"
+                              Point2="0 30 0"
+                              ThetaDiv="10" />
+
+            <ht:SphereVisual3D x:Name="SphereFill"
+                               Center="0 0 0"
+                               Fill="White"
+                               Radius="19.9"
+                               Visible="{Binding ElementName=CheckSphereFill,
+                                                 Path=IsChecked}" />
+
+            <ht:TubeVisual3D x:Name="MyTube" Fill="DarkCyan" />
+
+            <ModelVisual3D x:Name="MySphericals" />
+
+            <ModelVisual3D x:Name="TangentSpace" />
+        </ht:HelixViewport3D>
+    </DockPanel>
 </UserControl>

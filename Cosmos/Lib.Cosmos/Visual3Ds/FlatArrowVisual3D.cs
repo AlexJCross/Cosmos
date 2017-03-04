@@ -4,9 +4,93 @@
     using System.Windows;
     using System.Windows.Media.Media3D;
 
-    /// <summary>
-    /// A visual element that shows an arrow.
-    /// </summary>
+    public class LightConeVisual3D : MeshElement3D
+    {
+        public static readonly DependencyProperty XProperty =
+            DependencyProperty.Register(
+                nameof(X),
+                typeof(Vector3D),
+                typeof(LightConeVisual3D),
+                new PropertyMetadata(new Vector3D(1, 0, 0)));
+
+        public static readonly DependencyProperty TimeProperty =
+            DependencyProperty.Register(
+                nameof(Time),
+                typeof(Vector3D),
+                typeof(LightConeVisual3D),
+                new PropertyMetadata(new Vector3D(0, 1, 0)));
+
+        public static readonly DependencyProperty HeightProperty =
+            DependencyProperty.Register(nameof(Height), typeof(double), typeof(LightConeVisual3D), new PropertyMetadata(0.01));
+
+        public static readonly DependencyProperty LengthProperty =
+            DependencyProperty.Register(nameof(Length), typeof(double), typeof(LightConeVisual3D), new PropertyMetadata(200d));
+        
+        public static readonly DependencyProperty CenterProperty =
+            DependencyProperty.Register(nameof(Center), typeof(Point3D), typeof(LightConeVisual3D), new PropertyMetadata(new Point3D()));
+
+        public static readonly DependencyProperty WidthProperty =
+            DependencyProperty.Register(nameof(Width), typeof(double), typeof(LightConeVisual3D), new PropertyMetadata(0.5));
+
+        public double Width
+        {
+            get { return (double)GetValue(WidthProperty); }
+            set { SetValue(WidthProperty, value); }
+        }
+        
+        public Point3D Center
+        {
+            get { return (Point3D)GetValue(CenterProperty); }
+            set { SetValue(CenterProperty, value); }
+        }
+
+        public Vector3D Time
+        {
+            get { return (Vector3D)GetValue(TimeProperty); }
+            set { SetValue(TimeProperty, value); }
+        }
+
+        public double Height
+        {
+            get { return (double)GetValue(HeightProperty); }
+            set { SetValue(HeightProperty, value); }
+        }
+
+        public double Length
+        {
+            get { return (double)GetValue(LengthProperty); }
+            set { SetValue(LengthProperty, value); }
+        }
+
+        public Vector3D X
+        {
+            get { return (Vector3D)GetValue(XProperty); }
+            set { SetValue(XProperty, value); }
+        }
+
+        protected override MeshGeometry3D Tessellate()
+        {
+            var builder = new MeshBuilder(true, true);
+
+            var normal = Vector3D.CrossProduct(this.X, this.Time);
+
+            var matrix = new Matrix3D();
+            var quaternion = new Quaternion(normal, 45);
+            matrix.Rotate(quaternion);
+
+            var x1 = matrix.Transform(this.X);
+            var x2 = matrix.Transform(this.Time);
+
+            builder.AddBox(this.Center, x1, x2, this.Length, this.Width, this.Height);
+            builder.AddBox(this.Center, x2, x1, this.Length, this.Width, this.Height);
+
+            var mesh = builder.ToMesh();
+
+            return mesh;
+        }
+    }
+
+    /// <summary> A visual element that shows an arrow. </summary>
     public class FlatArrowVisual3D : MeshElement3D
     {
         /// <summary> Identifies the <see cref="Width"/> dependency property. </summary>
@@ -39,45 +123,24 @@
         /// <value>The height.</value>
         public double Height
         {
-            get
-            {
-                return (double)this.GetValue(HeightProperty);
-            }
-
-            set
-            {
-                this.SetValue(HeightProperty, value);
-            }
+            get { return (double)this.GetValue(HeightProperty); }
+            set { this.SetValue(HeightProperty, value); }
         }
 
         /// <summary> Gets or sets the width. </summary>
         /// <value>The width.</value>
         public double Width
         {
-            get
-            {
-                return (double)this.GetValue(WidthProperty);
-            }
-
-            set
-            {
-                this.SetValue(WidthProperty, value);
-            }
+            get { return (double)this.GetValue(WidthProperty); }
+            set { this.SetValue(WidthProperty, value); }
         }
 
         /// <summary> Gets or sets the direction. </summary>
         /// <value>The direction.</value>
         public Vector3D Direction
         {
-            get
-            {
-                return this.Point2 - this.Point1;
-            }
-
-            set
-            {
-                this.Point2 = this.Point1 + value;
-            }
+            get { return this.Point2 - this.Point1; }
+            set { this.Point2 = this.Point1 + value; }
         }
 
         /// <summary>
@@ -86,66 +149,32 @@
         /// <value>The length of the head relative to the diameter.</value>
         public double HeadLength
         {
-            get
-            {
-                return (double)this.GetValue(HeadLengthProperty);
-            }
-
-            set
-            {
-                this.SetValue(HeadLengthProperty, value);
-            }
+            get { return (double)this.GetValue(HeadLengthProperty); }
+            set { this.SetValue(HeadLengthProperty, value); }
         }
 
-        /// <summary>
-        /// Gets or sets the origin.
-        /// </summary>
+        /// <summary> Gets or sets the origin. </summary>
         /// <value>The origin.</value>
         public Point3D Origin
         {
-            get
-            {
-                return this.Point1;
-            }
-
-            set
-            {
-                this.Point1 = value;
-            }
+            get { return this.Point1; }
+            set { this.Point1 = value; }
         }
 
-        /// <summary>
-        /// Gets or sets the start point of the arrow.
-        /// </summary>
+        /// <summary> Gets or sets the start point of the arrow. </summary>
         /// <value>The start point.</value>
         public Point3D Point1
         {
-            get
-            {
-                return (Point3D)this.GetValue(Point1Property);
-            }
-
-            set
-            {
-                this.SetValue(Point1Property, value);
-            }
+            get { return (Point3D)this.GetValue(Point1Property); }
+            set { this.SetValue(Point1Property, value); }
         }
 
-        /// <summary>
-        /// Gets or sets the end point of the arrow.
-        /// </summary>
+        /// <summary> Gets or sets the end point of the arrow. </summary>
         /// <value>The end point.</value>
         public Point3D Point2
         {
-            get
-            {
-                return (Point3D)this.GetValue(Point2Property);
-            }
-
-            set
-            {
-                this.SetValue(Point2Property, value);
-            }
+            get { return (Point3D)this.GetValue(Point2Property); }
+            set { this.SetValue(Point2Property, value); }
         }
 
         /// <summary>

@@ -13,7 +13,12 @@
     using Extensions;
     using Infrastructure;
 
-    public class LorentzViewController
+    public interface ISceneVIewController
+    {
+        IList<ISceneClip> CreateSceneClips();
+    }
+
+    public class LorentzViewController : ISceneVIewController
     {
         private readonly LorentzView view;
 
@@ -288,11 +293,7 @@
 
             var toggleMajorGrid = new ToggleSceneClip("Major Grid", b => this.view.MajorGrid.Visible = b);
             var toggleMinorGrid = new ToggleSceneClip("Minor Grid", b => this.view.MinorGrid.Visible = b);
-            var togglePhotonLines = new ToggleSceneClip("Photon lines", b => 
-                {
-                    this.view.PhotonPlus.Visible = b;
-                    this.view.PhotonMinus.Visible = b;
-                });
+            var togglePhotonLines = new ToggleSceneClip("Photon lines", b => this.view.PhotonLines.Visible = b);
 
             return new List<ISceneClip>
             {
@@ -357,11 +358,15 @@
             this.Loaded += (s, e) =>
             {
                 var vm = (ISceneAware)this.DataContext;
-                var controller = new LorentzViewController(this);
 
                 vm.CameraViewModel = this.MyViewPort.ToCameraActions().AsViewModel();
-                vm.SceneClips = controller.CreateSceneClips();
+                vm.SceneClips = this.SceneViewController.CreateSceneClips();
             };
+        }
+
+        public ISceneVIewController SceneViewController
+        {
+            get { return new LorentzViewController(this); }
         }
 
         public bool KeepAlive
