@@ -173,7 +173,7 @@
 
         private IEnumerable<Point3D> GenerateAzimuthalPoints(double radius)
         {
-            const int Points = 60;
+            const int Points = 100;
 
             double z = this.GetZValue(radius);
 
