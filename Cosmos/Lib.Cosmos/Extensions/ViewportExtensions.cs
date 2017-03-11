@@ -9,6 +9,30 @@
 
     public static class ViewportExtensions
     {
+        public static HelixViewport3D AddDefaultLights(this HelixViewport3D viewport)
+        {
+            Visual3D lightAbove = new SunLight
+            {
+                Ambient = 0.9,
+                Altitude = 90,
+                Brightness = 0.5,
+                ShowLights = false
+            };
+
+            Visual3D lightBelow = new SunLight
+            {
+                Ambient = 0.9,
+                Altitude = -90,
+                Brightness = 0.5,
+                ShowLights = false
+            };
+
+            viewport.Children.Add(lightAbove);
+            viewport.Children.Add(lightBelow);
+
+            return viewport;
+        }
+
         public static CameraActions ToCameraActions(this HelixViewport3D viewport)
         {
             return new CameraActions(

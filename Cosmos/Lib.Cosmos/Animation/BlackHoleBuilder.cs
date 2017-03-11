@@ -14,7 +14,6 @@
         public double RingRadius { get; set; } = 10;
         public double Mass { get; set; } = 1;
 
-
         public EmbeddedBlackHoleBuilder WithThickness(double thickness)
         {
             this.Thickness = thickness;
@@ -45,14 +44,19 @@
             return this;
         }
 
-        public Model3DGroup Build()
+        public ModelVisual3D Build()
         {
             var group = new Model3DGroup();
 
             this.BuildAzimuthalTubes(group);
             this.BuildRadialTubes(group);
 
-            return group;
+            var modelVisual = new ModelVisual3D
+            {
+                Content = group,
+            };
+
+            return modelVisual;
         }
 
         private void BuildAzimuthalTubes(Model3DGroup group)
@@ -68,7 +72,7 @@
                 {
                     Fill = Brushes.DarkCyan,
                     Diameter = this.Thickness,
-                    ThetaDiv = Theta,
+                    ThetaDiv = this.Theta,
                     Path = new Point3DCollection(points),
                     BackMaterial = null,
                     IsPathClosed = true
@@ -97,13 +101,13 @@
 
         private void BuildRadialTubes(Model3DGroup group)
         {
-            IEnumerable<Point3D> points = GenerateRadialPoints();
+            IEnumerable<Point3D> points = this.GenerateRadialPoints();
 
             var tubeVisual = new TubeVisual3D
             {
                 Fill = Brushes.DarkCyan,
                 Diameter = this.Thickness,
-                ThetaDiv = Theta,
+                ThetaDiv = this.Theta,
                 IsPathClosed = false,
                 Path = new Point3DCollection(points),
                 BackMaterial = null
@@ -116,8 +120,6 @@
 
             for (int i = 0; i < numLongitude; i++)
             {
-                var model = tubeVisual.Model;
-
                 double angle = (360 / numLongitude) * i;
                 var axis = new Vector3D(0, 0, 1);
                 Rotation3D rotation = new AxisAngleRotation3D(axis, angle);

@@ -96,14 +96,21 @@
     <Compile Include="Scenes\Infrastructure\Scene.cs" />
     <Compile Include="Scenes\Infrastructure\SceneClip.cs" />
     <Compile Include="Scenes\Infrastructure\ToggleSceneClip.cs" />
+    <Compile Include="Scenes\ViewControllers\BlackHoleViewController.cs" />
+    <Compile Include="Scenes\ViewControllers\LorentzViewController.cs" />
+    <Compile Include="Scenes\ViewControllers\ISceneViewController.cs" />
+    <Compile Include="Scenes\ViewControllers\TestViewController.cs" />
     <Compile Include="Scenes\ViewModels\BlackHoleViewModel.cs" />
     <Compile Include="Scenes\ViewModels\LorentzViewModel.cs" />
-    <Compile Include="Scenes\Views\BlackHoleView.xaml.cs">
-      <DependentUpon>BlackHoleView.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Scenes\ViewModels\TestViewModel.cs" />
+    <Compile Include="Scenes\Views\BlackHoleView.cs" />
     <Compile Include="Scenes\Views\LorentzView.xaml.cs">
       <DependentUpon>LorentzView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Scenes\Views\SceneViewBase.xaml.cs">
+      <DependentUpon>SceneViewBase.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Scenes\Views\TestView.cs" />
     <Compile Include="Utils\MemoryUtils.cs" />
     <Compile Include="ViewModels\CameraControlViewModel.cs" />
     <Compile Include="ViewModels\ICameraControlViewModel.cs" />
@@ -127,11 +134,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Scenes\Views\BlackHoleView.xaml">
+    <Page Include="Scenes\Views\LorentzView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Scenes\Views\LorentzView.xaml">
+    <Page Include="Scenes\Views\SceneViewBase.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -151,9 +158,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Scenes\ViewControllers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\Helix\Source\HelixToolkit.Wpf\HelixToolkit.Wpf.csproj">
       <Project>{3f3b4548-a9db-4874-86f7-e7c4fec8a351}</Project>

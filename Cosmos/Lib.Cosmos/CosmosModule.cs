@@ -30,10 +30,22 @@
         private void RegisterScenes()
         {
             IScene scene1 = new Scene(1, 1, "Lorentz", "Description", typeof(LorentzView));
-            IScene scene2 = new Scene(1, 2, "Black Hole", "Description",  typeof(BlackHoleView));
+            IScene scene2 = new Scene(1, 2, "Black Hole", "Description", typeof(BlackHoleView));
+            IScene scene3 = new Scene(1, 3, "Test View", "Description", typeof(TestView));
 
-            this.container.RegisterInstance(scene1.Name, scene1);
-            this.container.RegisterInstance(scene2.Name, scene2);
+            this.container.RegisterScene(scene1);
+            this.container.RegisterScene(scene2);
+            this.container.RegisterScene(scene3);
+        }
+    }
+
+    public static class ContainerExtensions
+    {
+        public static IUnityContainer RegisterScene(this IUnityContainer container, IScene scene)
+        {
+            container.RegisterInstance(scene.Name, scene);
+
+            return container;
         }
     }
 }

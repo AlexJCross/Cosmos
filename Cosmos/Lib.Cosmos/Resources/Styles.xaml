@@ -3,6 +3,11 @@
                     xmlns:ht="http://helix-toolkit.org/wpf">
 
     <!--  Colors  -->
+    <!--
+        Material="{ht:Material {StaticResource ResourceKey=Kuler3},
+        SpecularIntensity=0.10}"
+    -->
+
     <Color x:Key="Kuler1">#000000</Color>
     <Color x:Key="Kuler2">#333333</Color>
     <Color x:Key="Kuler3">#FF358B</Color>
