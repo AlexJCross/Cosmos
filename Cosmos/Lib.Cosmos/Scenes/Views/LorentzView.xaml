@@ -73,12 +73,23 @@
 
             <ht:ArrowVisual3D x:Name="arrow2"
                               Diameter="0.8"
+                              Material="{ht:Material {StaticResource Kuler9},
+                                                     SpecularIntensity=0.10}"
+                              Origin="00 -10 0"
+                              Point1="00 -10 0"
+                              Point2="-10 -30 0"
+                              ThetaDiv="10" />
+
+            <ht:ArrowVisual3D x:Name="arrow5"
+                              Diameter="0.8"
                               Material="{ht:Material {StaticResource Kuler4},
                                                      SpecularIntensity=0.10}"
                               Origin="00 10 0"
                               Point1="00 10 0"
                               Point2="10 30 0"
                               ThetaDiv="10" />
+
+            <!--443994-->
 
             <visuals:LightConeVisual3D x:Name="PhotonLines" Material="{ht:Material {StaticResource Kuler5}, SpecularIntensity=0.10}" />
 

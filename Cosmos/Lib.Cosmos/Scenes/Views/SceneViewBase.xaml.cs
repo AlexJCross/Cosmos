@@ -1,4 +1,6 @@
-﻿namespace Lib.Cosmos.Scenes.Views
+﻿using System;
+
+namespace Lib.Cosmos.Scenes.Views
 {
     using Cosmos.ViewModels;
     using Prism.Regions;
@@ -11,10 +13,12 @@
         protected SceneViewBase()
         {
             this.InitializeComponent();
-            this.MyViewPort.AddDefaultLights();
+
+            Console.WriteLine(this.MyLight);
 
             this.Loaded += (s, e) =>
             {
+                this.MyViewPort.AddDefaultLights();
                 var vm = this.DataContext as ISceneAware;
 
                 if (vm != null)

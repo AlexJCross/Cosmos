@@ -1,16 +1,16 @@
 ﻿namespace Lib.Cosmos.Scenes.ViewControllers
 {
-    using Extensions;
-    using Animation;
-    using Infrastructure;
-    using Views;
     using System;
     using System.Collections.Generic;
-    using System.Windows.Media.Media3D;
-    using System.Windows.Media.Animation;
-    using Visual3Ds;
-    using HelixToolkit.Wpf;
     using System.Windows;
+    using System.Windows.Media.Animation;
+    using System.Windows.Media.Media3D;
+    using HelixToolkit.Wpf;
+    using Animation;
+    using Extensions;
+    using Infrastructure;
+    using Views;
+    using Visual3Ds;
 
     public class LorentzViewController : ISceneViewController
     {
@@ -19,6 +19,54 @@
         public LorentzViewController(LorentzView view)
         {
             this.view = view;
+        }
+
+        public IList<ISceneClip> CreateSceneClips()
+        {
+            var togglePolars = new ToggleSceneClip("Polars", this.TogglePolars);
+            var toggleSphericalMesh = new ToggleSceneClip("Sphere", this.ToggleSphericalMesh);
+            var toggleSphereFill = new ToggleSceneClip("Sphere fill", b => this.view.SphereFill.Visible = b);
+
+            var toggleMajorGrid = new ToggleSceneClip("Major Grid", b => this.view.MajorGrid.Visible = b);
+            var toggleMinorGrid = new ToggleSceneClip("Minor Grid", b => this.view.MinorGrid.Visible = b);
+            var togglePhotonLines = new ToggleSceneClip("Photon lines", b => this.view.PhotonLines.Visible = b);
+
+            return new List<ISceneClip>
+            {
+                new SceneClip("Lorentz", this.SimulateLorentzTransform),
+                new SceneClip("Move Lorentz", this.MoveLorentz),
+                new SceneClip("Move Key Frame", this.MoveKeyFrame),
+                new SceneClip("Rotate tangent", () =>
+                {
+                    this.CreateTangentSpace();
+                    this.RotateTangentSpace();
+                }),
+                new SceneClip("Enter Polars", () =>
+                {
+                    togglePolars.Value = true;
+                    this.view.MyTube.EnterGrow();
+                }),
+                new SceneClip("Enter sphere", () =>
+                {
+                    toggleSphericalMesh.Value = true;
+                    this.view.MySphericals.EnterGrow();
+                }),
+                new SceneClip("Enter Both", () =>
+                {
+                    togglePolars.Value = true;
+                    toggleSphericalMesh.Value = true;
+                    this.view.MyTube.EnterGrow();
+                    this.view.MySphericals.EnterGrow();
+                }),
+                new SceneClip("Exit sphere",
+                    () => { this.view.MySphericals.ExitShrink(() => toggleSphericalMesh.Value = false); }),
+                toggleMajorGrid,
+                toggleMinorGrid,
+                togglePhotonLines,
+                togglePolars,
+                toggleSphericalMesh,
+                toggleSphereFill
+            };
         }
 
         private void ToggleSphericalMesh(bool isChecked)
@@ -34,13 +82,9 @@
         private void ToggleVisual(Visual3D visual, bool isChecked)
         {
             if (isChecked)
-            {
                 this.view.MyViewPort.Children.InsertIfMissing(visual);
-            }
             else
-            {
                 this.view.MyViewPort.Children.RemoveIfPresent(visual);
-            }
         }
 
         private void CreateTangentSpace()
@@ -64,7 +108,7 @@
                 Material = this.view.arrow4.Material,
                 BackMaterial = null,
                 Width = 0.2,
-                HeadLength = 1,
+                HeadLength = 1
             };
 
             var arrowAxisY = new FlatArrowVisual3D
@@ -74,7 +118,7 @@
                 Material = this.view.arrow4.Material,
                 BackMaterial = null,
                 Width = 0.2,
-                HeadLength = 1,
+                HeadLength = 1
             };
 
             arrowAxisX.Model.Freeze();
@@ -85,11 +129,11 @@
             var rotation = new QuaternionRotation3D(quaternion);
             Transform3D arrowRotateTransform = new RotateTransform3D(rotation);
 
-            int NumberArrows = 16;
+            var NumberArrows = 16;
 
-            for (int i = 0; i < NumberArrows; i++)
+            for (var i = 0; i < NumberArrows; i++)
             {
-                double theta = i * (360d / NumberArrows);
+                var theta = i * (360d / NumberArrows);
 
                 var arrow = new FlatArrowVisual3D
                 {
@@ -106,8 +150,7 @@
             }
 
 
-
-            var arrowAnimation2 = new Point3DAnimationUsingKeyFrames()
+            var arrowAnimation2 = new Point3DAnimationUsingKeyFrames
             {
                 // AccelerationRatio = 0.5,
                 // DecelerationRatio = 0.5,
@@ -116,9 +159,10 @@
                 RepeatBehavior = RepeatBehavior.Forever
             };
 
-            var points = new[] { new Point3D(5, 6, 0), new Point3D(2, -8, 0), new Point3D(-5, -3, 0), new Point3D(5, -7, 0) };
+            var points = new[]
+                {new Point3D(5, 6, 0), new Point3D(2, -8, 0), new Point3D(-5, -3, 0), new Point3D(5, -7, 0)};
 
-            for (int i = 0; i < points.Length; i++)
+            for (var i = 0; i < points.Length; i++)
             {
                 Point3DKeyFrame point3DKeyFrame = new SplinePoint3DKeyFrame
                 {
@@ -187,28 +231,28 @@
 
             var myEasingDoubleKeyFrame1 = new EasingDoubleKeyFrame
             {
-                EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut },
+                EasingFunction = new SineEase {EasingMode = EasingMode.EaseInOut},
                 KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0)),
                 Value = 0
             };
 
             var myEasingDoubleKeyFrame2 = new EasingDoubleKeyFrame
             {
-                EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut },
+                EasingFunction = new SineEase {EasingMode = EasingMode.EaseInOut},
                 KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(1)),
                 Value = 100
             };
 
             var myEasingDoubleKeyFrame3 = new EasingDoubleKeyFrame
             {
-                EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut },
+                EasingFunction = new SineEase {EasingMode = EasingMode.EaseInOut},
                 KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(2)),
                 Value = 80
             };
 
             var myEasingDoubleKeyFrame4 = new EasingDoubleKeyFrame
             {
-                EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut },
+                EasingFunction = new SineEase {EasingMode = EasingMode.EaseInOut},
                 KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(3)),
                 Value = 180
             };
@@ -244,16 +288,13 @@
                 AutoReverse = false
             };
 
-
             a1.Completed += (s, a) =>
             {
-                const double side = 40;
-
-
+                const double Side = 40;
 
                 this.view.MyViewPort.SetView(
-                    new Point3D(0, -side, this.view.MyCamera.Position.Z + 10),
-                    new Vector3D(0, side, -this.view.MyCamera.Position.Z - 10),
+                    new Point3D(0, -Side, this.view.MyCamera.Position.Z + 10),
+                    new Vector3D(0, Side, -this.view.MyCamera.Position.Z - 10),
                     new Vector3D(0, 0, 1),
                     1000);
             };
@@ -272,57 +313,6 @@
             };
 
             this.view.MajorGrid.BeginAnimation(ModelVisual3D.TransformProperty, matrixAnimation);
-        }
-
-        public IList<ISceneClip> CreateSceneClips()
-        {
-            var togglePolars = new ToggleSceneClip("Polars", this.TogglePolars);
-            var toggleSphericalMesh = new ToggleSceneClip("Sphere", this.ToggleSphericalMesh);
-            var toggleSphereFill = new ToggleSceneClip("Sphere fill", b => this.view.SphereFill.Visible = b);
-
-            var toggleMajorGrid = new ToggleSceneClip("Major Grid", b => this.view.MajorGrid.Visible = b);
-            var toggleMinorGrid = new ToggleSceneClip("Minor Grid", b => this.view.MinorGrid.Visible = b);
-            var togglePhotonLines = new ToggleSceneClip("Photon lines", b => this.view.PhotonLines.Visible = b);
-
-            return new List<ISceneClip>
-            {
-                new SceneClip("Lorentz", this.SimulateLorentzTransform),
-                new SceneClip("Move Lorentz", this.MoveLorentz),
-                new SceneClip("Move Key Frame", this.MoveKeyFrame),
-                new SceneClip("Rotate tangent", () =>
-                    {
-                        this.CreateTangentSpace();
-                        this.RotateTangentSpace();
-                    }),
-                new SceneClip("Enter Polars", () =>
-                {
-                    togglePolars.Value = true;
-                    this.view.MyTube.EnterGrow();
-                }),
-                new SceneClip("Enter sphere", () =>
-                {
-                    toggleSphericalMesh.Value = true;
-                    this.view.MySphericals.EnterGrow();
-                }),
-                new SceneClip("Enter Both", () =>
-                {
-                    togglePolars.Value = true;
-                    toggleSphericalMesh.Value = true;
-                    this.view.MyTube.EnterGrow();
-                    this.view.MySphericals.EnterGrow();
-                }),
-                new SceneClip("Exit sphere", () =>
-                {
-                    this.view.MySphericals.ExitShrink(() => toggleSphericalMesh.Value = false);
-                }),
-
-                toggleMajorGrid,
-                toggleMinorGrid,
-                togglePhotonLines,
-                togglePolars,
-                toggleSphericalMesh,
-                toggleSphereFill,
-            };
         }
     }
 }

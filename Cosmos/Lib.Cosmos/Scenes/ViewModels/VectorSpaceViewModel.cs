@@ -2,7 +2,7 @@
 {
     using Cosmos.ViewModels;
 
-    public class TestViewModel : SceneAwareBase
+    public class VectorSpaceViewModel : SceneAwareBase
     {
     }
 }

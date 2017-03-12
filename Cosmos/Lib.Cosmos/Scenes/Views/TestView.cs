@@ -2,11 +2,11 @@
 {
     using ViewControllers;
 
-    public class TestView : SceneViewBase
+    public class VectorSpaceView : SceneViewBase
     {
         protected override ISceneViewController GetController()
         {
-            return new TestViewController();
+            return new VectorSpaceViewController(this);
         }
     }
 }

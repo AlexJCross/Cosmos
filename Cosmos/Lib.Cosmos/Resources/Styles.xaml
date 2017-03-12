@@ -3,16 +3,13 @@
                     xmlns:ht="http://helix-toolkit.org/wpf">
 
     <!--  Colors  -->
-    <!--
-        Material="{ht:Material {StaticResource ResourceKey=Kuler3},
-        SpecularIntensity=0.10}"
-    -->
-
     <Color x:Key="Kuler1">#000000</Color>
     <Color x:Key="Kuler2">#333333</Color>
     <Color x:Key="Kuler3">#FF358B</Color>
     <Color x:Key="Kuler4">#01B0F0</Color>
     <Color x:Key="Kuler5">#AEEE00</Color>
+    <Color x:Key="Kuler9">#445194</Color>
+    <Color x:Key="Kuler8">#DBE3EE</Color>
 
     <!--  Helix Viewport  -->
     <Style TargetType="{x:Type ht:HelixViewport3D}">

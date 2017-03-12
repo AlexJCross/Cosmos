@@ -99,10 +99,10 @@
     <Compile Include="Scenes\ViewControllers\BlackHoleViewController.cs" />
     <Compile Include="Scenes\ViewControllers\LorentzViewController.cs" />
     <Compile Include="Scenes\ViewControllers\ISceneViewController.cs" />
-    <Compile Include="Scenes\ViewControllers\TestViewController.cs" />
+    <Compile Include="Scenes\ViewControllers\VectorSpaceViewController.cs" />
     <Compile Include="Scenes\ViewModels\BlackHoleViewModel.cs" />
     <Compile Include="Scenes\ViewModels\LorentzViewModel.cs" />
-    <Compile Include="Scenes\ViewModels\TestViewModel.cs" />
+    <Compile Include="Scenes\ViewModels\VectorSpaceViewModel.cs" />
     <Compile Include="Scenes\Views\BlackHoleView.cs" />
     <Compile Include="Scenes\Views\LorentzView.xaml.cs">
       <DependentUpon>LorentzView.xaml</DependentUpon>
@@ -111,6 +111,7 @@
       <DependentUpon>SceneViewBase.xaml</DependentUpon>
     </Compile>
     <Compile Include="Scenes\Views\TestView.cs" />
+    <Compile Include="Utils\Materials.cs" />
     <Compile Include="Utils\MemoryUtils.cs" />
     <Compile Include="ViewModels\CameraControlViewModel.cs" />
     <Compile Include="ViewModels\ICameraControlViewModel.cs" />
@@ -126,6 +127,8 @@
       <DependentUpon>SceneClipsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Visual3Ds\FlatArrowVisual3D.cs" />
+    <Compile Include="Visual3Ds\LightConeVisual3D.cs" />
+    <Compile Include="Visual3Ds\ParallelogramVisual3D.cs" />
     <Compile Include="Windows\RegionNames.cs" />
     <Compile Include="Windows\SceneControl.cs" />
   </ItemGroup>

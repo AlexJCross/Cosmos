@@ -24,11 +24,12 @@
                 Ambient = 0.9,
                 Altitude = -90,
                 Brightness = 0.5,
-                ShowLights = false
+                ShowLights = false,
+                
             };
 
-            viewport.Children.Add(lightAbove);
             viewport.Children.Add(lightBelow);
+            viewport.Children.Add(lightAbove);
 
             return viewport;
         }

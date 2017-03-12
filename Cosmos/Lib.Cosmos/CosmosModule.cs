@@ -29,9 +29,9 @@
 
         private void RegisterScenes()
         {
-            IScene scene1 = new Scene(1, 1, "Lorentz", "Description", typeof(LorentzView));
-            IScene scene2 = new Scene(1, 2, "Black Hole", "Description", typeof(BlackHoleView));
-            IScene scene3 = new Scene(1, 3, "Test View", "Description", typeof(TestView));
+            IScene scene1 = new Scene(1, 1, "Vector Spaces", "Description", typeof(VectorSpaceView));
+            IScene scene2 = new Scene(1, 3, "Lorentz", "Description", typeof(LorentzView));
+            IScene scene3 = new Scene(1, 2, "Black Hole", "Description", typeof(BlackHoleView));
 
             this.container.RegisterScene(scene1);
             this.container.RegisterScene(scene2);
