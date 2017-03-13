@@ -1,5 +1,6 @@
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 using Lib.Cosmos.Visual3Ds;
 
 namespace Lib.Cosmos.Scenes.ViewControllers
@@ -18,15 +19,21 @@ namespace Lib.Cosmos.Scenes.ViewControllers
 
     public class VectorSpaceViewController : ISceneViewController
     {
-        private readonly ArrowVisual3D arrow1;
-        private readonly ArrowVisual3D arrow2;
+        private ArrowVisual3D arrow1;
+        private ArrowVisual3D arrow2;
+        private ArrowVisual3D resultant;
 
         private readonly VectorSpaceView view;
+        private ParallelogramVisual3D parallelogram;
 
         public VectorSpaceViewController(VectorSpaceView view)
         {
             this.view = view;
+            this.Initialize();
+        }
 
+        private void Initialize()
+        {
             this.arrow1 = new ArrowVisual3D
             {
                 Material = CosmosMaterials.Material4,
@@ -38,6 +45,54 @@ namespace Lib.Cosmos.Scenes.ViewControllers
                 Material = CosmosMaterials.Material3,
                 Diameter = 0.8
             };
+
+            this.resultant = new ArrowVisual3D
+            {
+                Material = CosmosMaterials.Material2,
+                Diameter = 0.8
+            };
+
+            this.parallelogram = new ParallelogramVisual3D
+            {
+                Point1 = this.arrow1.Point2,
+                Point2 = new Point3D(10, 25, 0),
+                Material = CosmosMaterials.Material8,
+                BackMaterial = CosmosMaterials.Material8,
+            };
+
+            Binding binding1 = new Binding("Point2")
+            {
+                Source = this.arrow1
+            };
+
+            Binding binding2 = new Binding("Point2")
+            {
+                Source = this.arrow2
+            };
+
+            Binding bindingResultant = new Binding("ResultantPoint3D")
+            {
+                Source = this.parallelogram
+            };
+
+
+
+            Uri uri = new Uri("pack://application:,,,/Resources/#CMU Serif Italic", UriKind.Absolute);
+
+
+            var text = new TextBlock
+            {
+                Text = "x+y", FontSize = 60, FontFamily = new FontFamily(uri, "CMU Serif Italic")
+            };
+
+            this.view.overlay.Children.Add(text);
+            Overlay.SetPosition3D(text, new Point3D(20, 10, 0));
+
+
+            BindingOperations.SetBinding(this.parallelogram, ParallelogramVisual3D.Point1Property, binding1);
+            BindingOperations.SetBinding(this.parallelogram, ParallelogramVisual3D.Point2Property, binding2);
+            BindingOperations.SetBinding(this.resultant, ArrowVisual3D.Point2Property, bindingResultant);
+            BindingOperations.SetBinding(text, Overlay.Position3DProperty, bindingResultant);
         }
 
         public IList<ISceneClip> CreateSceneClips()
@@ -48,6 +103,14 @@ namespace Lib.Cosmos.Scenes.ViewControllers
 
             var toggleArrow2 = new ToggleSceneClip("Arrow 2", isChecked => {
                 this.ToggleVisual(this.arrow2, isChecked);
+            });
+
+            var toggleResultant = new ToggleSceneClip("Resultant", isChecked => {
+                this.ToggleVisual(this.resultant, isChecked);
+            });
+
+            var toggleParallelogram = new ToggleSceneClip("Parallelogram", isChecked => {
+                this.ToggleVisual(this.parallelogram, isChecked);
             });
 
             return new List<ISceneClip>
@@ -67,9 +130,11 @@ namespace Lib.Cosmos.Scenes.ViewControllers
                 new SceneClip("Add Many", this.IntroduceArrows),
 
                 new SceneClip("Move Arrows", this.MoveArrows),
-
+                
                 toggleArrow1,
                 toggleArrow2,
+                toggleResultant,
+                toggleParallelogram
 
             };
         }
@@ -83,41 +148,22 @@ namespace Lib.Cosmos.Scenes.ViewControllers
         private async void IntroduceArrow2()
         {
             this.arrow2.Point1 = default(Point3D);
-
-            var parallelogram = new ParallelogramVisual3D
-            {
-                Point1 = this.arrow1.Point2,
-                Point2 = new Point3D(10, 25, 0),
-                Material = CosmosMaterials.Material8,
-                BackMaterial = CosmosMaterials.Material8,
-            };
-
-            Binding binding1 = new Binding("Point2")
-            {
-                Source = this.arrow1
-            };
-
-            Binding binding2 = new Binding("Point2")
-            {
-                Source = this.arrow2
-            };
-
-            BindingOperations.SetBinding(parallelogram, ParallelogramVisual3D.Point1Property, binding1);
-            BindingOperations.SetBinding(parallelogram, ParallelogramVisual3D.Point2Property, binding2);
-
-
-            this.view.MyViewPort.Children.Add(parallelogram);
-
             await this.arrow2.PointTo(new Point3D(10, 25, 0), TimeSpan.FromSeconds(0.5));
         }
 
         private async void MoveArrows()
         {
-            await this.arrow2.PointTo(new Point3D(-10, 15, 0));
+            Point3D[] points =
+            {
+                new Point3D(-10, 15, 0), new Point3D(-10, -15, 0), new Point3D(25, -5, 0),
+                new Point3D(-10, 15, 0)
+            };
 
-            await Task.Delay(200);
-
-            await this.arrow1.PointTo(new Point3D(-10, -15, 0));
+            for (int i = 0; i < points.Length; i++)
+            {
+                var arrow = i % 2 == 0 ? this.arrow2 : this.arrow1;
+                await arrow.PointTo(points[i]);
+            }
         }
 
         private async void IntroduceArrows()
@@ -154,16 +200,8 @@ namespace Lib.Cosmos.Scenes.ViewControllers
                 var y = 15 * Math.Sin(2 * Math.PI * i / NumArrows);
                 var point3D = new Point3D(x, y, 0);
                 point3D = mtrix.Transform(point3D);
-
-                var pointAnimation = new Point3DAnimation(new Point3D(2, 2, 0), point3D, new Duration(TimeSpan.FromSeconds(0.5)))
-                {
-                    AccelerationRatio = 0.3,
-                    DecelerationRatio = 0.5,
-                    FillBehavior = FillBehavior.HoldEnd,
-                    AutoReverse = false,
-                };
-
-                ellipseArrow.BeginAnimation(ArrowVisual3D.Point2Property, pointAnimation);
+                
+                var task = ellipseArrow.PointTo(point3D, TimeSpan.FromSeconds(0.5));
 
                 await Task.Delay(TimeSpan.FromMilliseconds(60));
             }
@@ -184,12 +222,12 @@ namespace Lib.Cosmos.Scenes.ViewControllers
 
     public static class ArrowMoveExtensions
     {
-        public static Task PointTo(this ArrowVisual3D arrow, Point3D point)
+        public static Task<ArrowVisual3D> PointTo(this ArrowVisual3D arrow, Point3D point)
         {
             return arrow.PointTo(point, TimeSpan.FromSeconds(1));
         }
 
-        public static Task PointTo(this ArrowVisual3D arrow, Point3D point, TimeSpan timeSpan)
+        public static Task<ArrowVisual3D> PointTo(this ArrowVisual3D arrow, Point3D point, TimeSpan timeSpan)
         {
             var startPoint = arrow.Point2;
 
@@ -201,8 +239,8 @@ namespace Lib.Cosmos.Scenes.ViewControllers
                 AutoReverse = false,
             };
 
-            var tcs = new TaskCompletionSource<int>();
-            pointAnimation2.Completed += (s, e) => tcs.SetResult(0);
+            var tcs = new TaskCompletionSource<ArrowVisual3D>();
+            pointAnimation2.Completed += (s, e) => tcs.SetResult(arrow);
             arrow.BeginAnimation(ArrowVisual3D.Point2Property, pointAnimation2);
 
             return tcs.Task;

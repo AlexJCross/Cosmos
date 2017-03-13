@@ -160,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\cmunti.ttf" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

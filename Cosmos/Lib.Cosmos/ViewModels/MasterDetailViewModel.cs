@@ -61,10 +61,6 @@
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
 
             var region = this.regionMangager.Regions[RegionNames.DetailRegion];
 

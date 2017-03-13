@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Media;
 
 namespace Lib.Cosmos.Scenes.Views
 {
@@ -13,6 +14,8 @@ namespace Lib.Cosmos.Scenes.Views
         protected SceneViewBase()
         {
             this.InitializeComponent();
+
+            CompositionTarget.Rendering += this.CompositionTargetRendering;
 
             Console.WriteLine(this.MyLight);
 
@@ -29,6 +32,10 @@ namespace Lib.Cosmos.Scenes.Views
                     vm.SceneClips = controller.CreateSceneClips();
                 }
             };
+        }
+
+        protected virtual void CompositionTargetRendering(object sender, EventArgs e)
+        {
         }
 
         public bool KeepAlive => false;

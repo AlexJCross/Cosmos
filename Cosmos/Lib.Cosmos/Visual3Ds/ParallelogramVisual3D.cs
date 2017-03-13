@@ -22,6 +22,28 @@ namespace Lib.Cosmos.Visual3Ds
                 typeof(ParallelogramVisual3D),
                 new UIPropertyMetadata(default(Point3D), GeometryChanged));
 
+        public static readonly DependencyProperty ResultantPoint3DProperty =
+            DependencyProperty.Register(
+                nameof(ResultantPoint3D),
+                typeof(Point3D),
+                typeof(ParallelogramVisual3D),
+                new PropertyMetadata(default(Point3D), null, CoerceValueCallback));
+
+        private static object CoerceValueCallback(DependencyObject d, object basevalue)
+        {
+            var me = (ParallelogramVisual3D) d;
+
+            var vec1 = me.Point1 - me.Origin;
+            var vec2 = me.Point2 - me.Origin;
+
+            return me.Origin + vec1 + vec2;
+        }
+
+        public Point3D ResultantPoint3D
+        {
+            get { return (Point3D)this.GetValue(ResultantPoint3DProperty); }
+            set { this.SetValue(ResultantPoint3DProperty, value); }
+        }
 
         /// <summary> Identifies the <see cref="Origin" /> dependency property. </summary>
         public static readonly DependencyProperty OriginProperty = DependencyProperty.Register(
@@ -58,17 +80,14 @@ namespace Lib.Cosmos.Visual3Ds
         /// <returns>A triangular mesh geometry.</returns>
         protected override MeshGeometry3D Tessellate()
         {
-            var vec1 = this.Point1 - this.Origin;
-            var vec2 = this.Point2 - this.Origin;
-
-            var point4 = this.Origin + vec1 + vec2;
+            this.CoerceValue(ResultantPoint3DProperty);
 
             Point3D[] pts =
             {
                 this.Origin,
                 this.Point1,
                 this.Point2,
-                point4
+                this.ResultantPoint3D
             };
 
             var builder = new MeshBuilder(false, false);

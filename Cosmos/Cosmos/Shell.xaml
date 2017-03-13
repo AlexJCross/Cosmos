@@ -9,6 +9,7 @@
         Title="Cosmos"
         Width="1300"
         Height="700"
+        TextOptions.TextFormattingMode="Ideal"
         mc:Ignorable="d">
     <ContentControl prism:RegionManager.RegionName="MasterRegion" />
 </Window>

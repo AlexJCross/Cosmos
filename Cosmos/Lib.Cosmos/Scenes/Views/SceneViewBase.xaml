@@ -32,6 +32,7 @@
             <views:SceneClipsControl SceneClips="{Binding Path=SceneClips}" />
         </StackPanel>
 
+        <Grid>
         <ht:HelixViewport3D x:Name="MyViewPort">
 
             <ht:HelixViewport3D.Camera>
@@ -56,5 +57,7 @@
                          ShowLights="False" />
 
         </ht:HelixViewport3D>
+        <Canvas Name="overlay" IsHitTestVisible="False" ClipToBounds="False"/>
+        </Grid>
     </DockPanel>
 </UserControl>
