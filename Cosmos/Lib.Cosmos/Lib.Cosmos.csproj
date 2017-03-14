@@ -74,6 +74,10 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
+    <Reference Include="WpfMath, Version=0.3.0.38783, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WpfMath.0.3.0\lib\net40\WpfMath.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animation\AnimationUtil.cs" />
@@ -111,7 +115,7 @@
       <DependentUpon>SceneViewBase.xaml</DependentUpon>
     </Compile>
     <Compile Include="Scenes\Views\TestView.cs" />
-    <Compile Include="Utils\Materials.cs" />
+    <Compile Include="Utils\CosmosMaterials.cs" />
     <Compile Include="Utils\MemoryUtils.cs" />
     <Compile Include="ViewModels\CameraControlViewModel.cs" />
     <Compile Include="ViewModels\ICameraControlViewModel.cs" />

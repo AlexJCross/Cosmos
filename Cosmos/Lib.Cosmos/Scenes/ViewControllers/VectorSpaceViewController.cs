@@ -1,10 +1,16 @@
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Media;
-using Lib.Cosmos.Visual3Ds;
+
+
+using System.Windows.Shapes;
+using WpfMath;
 
 namespace Lib.Cosmos.Scenes.ViewControllers
 {
+    using System.Windows.Controls;
+    using System.Windows.Data;
+    using System.Windows.Media;
+    using Lib.Cosmos.Visual3Ds;
+    using WpfMath.Controls;
+
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -67,7 +73,7 @@ namespace Lib.Cosmos.Scenes.ViewControllers
 
             Binding binding2 = new Binding("Point2")
             {
-                Source = this.arrow2
+                Source = this.arrow2,
             };
 
             Binding bindingResultant = new Binding("ResultantPoint3D")
@@ -75,24 +81,61 @@ namespace Lib.Cosmos.Scenes.ViewControllers
                 Source = this.parallelogram
             };
 
-
-
-            Uri uri = new Uri("pack://application:,,,/Resources/#CMU Serif Italic", UriKind.Absolute);
-
-
             var text = new TextBlock
             {
-                Text = "x+y", FontSize = 60, FontFamily = new FontFamily(uri, "CMU Serif Italic")
+                Text = "x+y",
+                FontSize = 48,
+                FontFamily = CosmosResources.LatexFont
             };
 
-            this.view.overlay.Children.Add(text);
-            Overlay.SetPosition3D(text, new Point3D(20, 10, 0));
+            var formulaParser = new TexFormulaParser();
+
+            
+
+
+
+
+            // TexFormula formula = formulaParser.Parse(@"\left(x^2 + \vec{v} +  \langle{\widetilde{\phi}} |\vec{\Psi} \rangle + 2 \cdot x \right) = 0");
+            TexFormula formula1 = formulaParser.Parse(@"\vec{v}");
+            TexFormula formula2 = formulaParser.Parse(@"\vec{u}");
+
+            // formula.SetForeground(Brushes.Green);
+            var renderer = formula1.GetRenderer(TexStyle.Display, 48);
+            var geometry = renderer.RenderToGeometry(20, 40);
+            var path = new Path { Data = geometry, Fill = CosmosMaterials.Brush4 };
+
+            var renderer2 = formula2.GetRenderer(TexStyle.Display, 48);
+            var geometry2 = renderer2.RenderToGeometry(20, 40);
+            var path2 = new Path { Data = geometry2, Fill = CosmosMaterials.Brush3 };
+
+            Canvas canvas = this.view.overlay;
+
+            canvas.Children.Add(path);
+            Overlay.SetPosition3D(path, new Point3D(20, 10, 0));
+
+            canvas.Children.Add(path2);
+            Overlay.SetPosition3D(path2, new Point3D(20, 10, 0));
+
+            var formulaControl = new FormulaControl
+            {
+                Formula = @"\vec{u}",
+                Scale = 48,
+                FontFamily = CosmosResources.LatexFont
+            };
+
+
+            // canvas.Children.Add(text);
+            // Overlay.SetPosition3D(text, new Point3D(20, 10, 0));
+            
+            // canvas.Children.Add(formulaControl);
+            // Overlay.SetPosition3D(formulaControl, new Point3D(10, 20, 0));
 
 
             BindingOperations.SetBinding(this.parallelogram, ParallelogramVisual3D.Point1Property, binding1);
             BindingOperations.SetBinding(this.parallelogram, ParallelogramVisual3D.Point2Property, binding2);
             BindingOperations.SetBinding(this.resultant, ArrowVisual3D.Point2Property, bindingResultant);
-            BindingOperations.SetBinding(text, Overlay.Position3DProperty, bindingResultant);
+            BindingOperations.SetBinding(path, Overlay.Position3DProperty, binding1);
+            BindingOperations.SetBinding(path2, Overlay.Position3DProperty, binding2);
         }
 
         public IList<ISceneClip> CreateSceneClips()

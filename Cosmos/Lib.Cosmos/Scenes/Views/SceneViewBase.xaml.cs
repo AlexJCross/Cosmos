@@ -17,7 +17,7 @@ namespace Lib.Cosmos.Scenes.Views
 
             CompositionTarget.Rendering += this.CompositionTargetRendering;
 
-            Console.WriteLine(this.MyLight);
+            this.Unloaded += (sender, args) => { CompositionTarget.Rendering -= this.CompositionTargetRendering; };
 
             this.Loaded += (s, e) =>
             {

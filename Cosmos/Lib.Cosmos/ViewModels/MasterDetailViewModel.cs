@@ -48,8 +48,11 @@
         {
             this.ValidateMemoryClearance();
 
+            var region = this.regionMangager.Regions[RegionNames.DetailRegion];
+
+            
             this.regionMangager.RegisterViewWithRegion(RegionNames.DetailRegion, this.scene.ViewType);
-            this.regionMangager.RequestNavigate(RegionNames.DetailRegion, scene.ViewType.Name);
+            region.RequestNavigate(this.scene.ViewType.Name);
         }
 
         private void ValidateMemoryClearance()
