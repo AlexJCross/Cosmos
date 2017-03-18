@@ -114,7 +114,8 @@
     <Compile Include="Scenes\Views\SceneViewBase.xaml.cs">
       <DependentUpon>SceneViewBase.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Scenes\Views\TestView.cs" />
+    <Compile Include="Scenes\Views\Overlay.cs" />
+    <Compile Include="Scenes\Views\VectorSpaceView.cs" />
     <Compile Include="Utils\CosmosMaterials.cs" />
     <Compile Include="Utils\MemoryUtils.cs" />
     <Compile Include="ViewModels\CameraControlViewModel.cs" />
@@ -132,6 +133,7 @@
     </Compile>
     <Compile Include="Visual3Ds\FlatArrowVisual3D.cs" />
     <Compile Include="Visual3Ds\LightConeVisual3D.cs" />
+    <Compile Include="Visual3Ds\OneFormVisual3D.cs" />
     <Compile Include="Visual3Ds\ParallelogramVisual3D.cs" />
     <Compile Include="Windows\RegionNames.cs" />
     <Compile Include="Windows\SceneControl.cs" />
