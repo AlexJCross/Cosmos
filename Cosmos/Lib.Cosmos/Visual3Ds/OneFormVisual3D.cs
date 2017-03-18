@@ -124,11 +124,12 @@
                 return null;
             }
 
-            var displacement = this.Direction;
-            displacement.Normalize();
-            displacement *= UnitSeparation / this.Magnitude;
+            var unitDirection = this.Direction;
+            unitDirection.Normalize();
+            var displacement = unitDirection * (UnitSeparation / this.Magnitude);
 
             var yDirection = Vector3D.CrossProduct(this.Direction, this.Normal);
+            yDirection.Normalize();
 
             var num = this.NumBars;
 
@@ -137,26 +138,115 @@
 
             var scaledWidth = this.Width * UnitSeparation;
 
+            Point3D[] points = this.GetArrowHeadPoints(displacement, yDirection);
+            Vector3D widthOffset = new Vector3D((this.Width / 2 - 1) * UnitSeparation, 0, 0);
+
+
             if (num % 2 == 1)
             {
+
                 builder.AddBox(this.Origin, this.Direction, yDirection, 0.8, scaledWidth, this.Height);
+
+                this.AddArrowHead(builder, points, widthOffset);
+                this.AddArrowHead(builder, points, -widthOffset);
 
                 for (var i = 1; i < (num + 1) / 2; i++)
                 {
-                    builder.AddBox(this.Origin + i * displacement, this.Direction, yDirection, XLength, scaledWidth, this.Height);
-                    builder.AddBox(this.Origin - i * displacement, this.Direction, yDirection, XLength, scaledWidth, this.Height);
+                    Vector3D increment = i * displacement;
+
+                    builder.AddBox(this.Origin + increment, this.Direction, yDirection, XLength, scaledWidth, this.Height);
+                    builder.AddBox(this.Origin - increment, this.Direction, yDirection, XLength, scaledWidth, this.Height);
+
+                    Vector3D offset1 = widthOffset + increment;
+                    Vector3D offset2 = widthOffset - increment;
+
+                    this.AddArrowHead(builder, points,  offset1);
+                    this.AddArrowHead(builder, points, -offset1);
+                    this.AddArrowHead(builder, points,  offset2);
+                    this.AddArrowHead(builder, points, -offset2);
                 }
             }
             else
             {
                 for (var i = 1; i <= num / 2; i++)
                 {
-                    builder.AddBox(this.Origin + (i - 0.5) * displacement, this.Direction, yDirection, XLength, scaledWidth, this.Height);
-                    builder.AddBox(this.Origin - (i - 0.5) * displacement, this.Direction, yDirection, XLength, scaledWidth, this.Height);
+                    Vector3D increment = (i - 0.5) * displacement;
+
+                    builder.AddBox(this.Origin + increment, this.Direction, yDirection, XLength, scaledWidth, this.Height);
+                    builder.AddBox(this.Origin - increment, this.Direction, yDirection, XLength, scaledWidth, this.Height);
+
+                    Vector3D offset1 = widthOffset + increment;
+                    Vector3D offset2 = widthOffset - increment;
+
+                    this.AddArrowHead(builder, points, offset1);
+                    this.AddArrowHead(builder, points, -offset1);
+                    this.AddArrowHead(builder, points, offset2);
+                    this.AddArrowHead(builder, points, -offset2);
                 }
             }
 
+
+
+            
+            
             return builder.ToMesh(true);
+        }
+
+        private static readonly int[] ArrowHeadIndices = GetArrowHeadIndices();
+
+        private static int[] GetArrowHeadIndices()
+        {
+            int[] indices =
+            {
+                // Bottom
+                0, 2, 1,
+                // back
+                // 0, 3, 2,
+                // 2, 3, 5,
+                // Right
+                1, 4, 0,
+                4, 3, 0,
+                // Left
+                1, 2, 4,
+                2, 5, 4,
+                // Top
+                3, 4, 5
+            };
+
+            return indices;
+        }
+
+        private Point3D[] GetArrowHeadPoints(Vector3D displacement, Vector3D yDirection)
+        {
+            Vector3D heightDisplacement = this.Height / 2 * this.Normal;
+            Vector3D lengthDisplacement = displacement / 2;
+            double width = 2;
+
+            Point3D[] corners =
+            {
+                // Head
+                this.Origin + (width * yDirection) - heightDisplacement,
+                this.Origin + lengthDisplacement - heightDisplacement,
+                this.Origin - (width * yDirection) - heightDisplacement,
+
+                this.Origin + (width * yDirection) + heightDisplacement,
+                this.Origin + lengthDisplacement + heightDisplacement,
+                this.Origin - (width * yDirection) + heightDisplacement,
+            };
+
+            return corners;
+        }
+
+        private void AddArrowHead(MeshBuilder builder, Point3D[] points, Vector3D offset)
+        {
+            var transformedPoints = new Point3D[points.Length];
+
+            for (int i = 0; i < points.Length; i++)
+            {
+                transformedPoints[i] = points[i] + offset;
+            }
+
+            builder.Append(transformedPoints, ArrowHeadIndices);
         }
     }
 }

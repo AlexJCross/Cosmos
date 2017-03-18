@@ -105,7 +105,7 @@ namespace Lib.Cosmos.Scenes.ViewControllers
             {
                 Material = CosmosMaterials.Material9,
                 Direction = new Vector3D(0, 1, 0),
-                NumBars = 7,
+                NumBars = 6,
                 Width = 5,
                 Magnitude = 2
             };
