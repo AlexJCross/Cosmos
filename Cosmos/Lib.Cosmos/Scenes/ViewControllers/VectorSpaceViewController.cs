@@ -52,18 +52,18 @@ namespace Lib.Cosmos.Scenes.ViewControllers
 
             return new List<ISceneClip>
             {
-                new SceneClip("Add Arrow 1", () =>
+                new AsyncSceneClip("Add Arrow 1", () =>
                 {
                     toggleArrow1.Value = true;
-                    this.IntroduceArrow1();
+                    return this.IntroduceArrow1();
                 }),
-                new SceneClip("Add Arrow 2", () =>
+                new AsyncSceneClip("Add Arrow 2", () =>
                 {
                     toggleArrow2.Value = true;
-                    this.IntroduceArrow2();
+                    return this.IntroduceArrow2();
                 }),
-                new SceneClip("Add Many", this.IntroduceArrows),
-                new SceneClip("Move Arrows", this.MoveArrows),
+                new AsyncSceneClip("Add Many", this.IntroduceArrows),
+                new AsyncSceneClip("Move Arrows", this.MoveArrows),
                 new SceneClip("Vary One-Form", this.VaryMagnitude),
                 toggleArrow1,
                 toggleArrow2,
@@ -105,7 +105,7 @@ namespace Lib.Cosmos.Scenes.ViewControllers
             {
                 Material = CosmosMaterials.Material9,
                 Direction = new Vector3D(0, 1, 0),
-                NumBars = 6,
+                NumBars = 7,
                 Width = 5,
                 Magnitude = 2
             };
@@ -142,19 +142,19 @@ namespace Lib.Cosmos.Scenes.ViewControllers
             // formula.SetForeground(Brushes.Green);
             var renderer = formula1.GetRenderer(TexStyle.Display, 48);
             var geometry = renderer.RenderToGeometry(20, 40);
-            var path = new Path {Data = geometry, Fill = CosmosMaterials.Brush4};
+            var pathLetter1 = new Path {Data = geometry, Fill = CosmosMaterials.Brush4};
 
             var renderer2 = formula2.GetRenderer(TexStyle.Display, 48);
             var geometry2 = renderer2.RenderToGeometry(20, 40);
-            var path2 = new Path {Data = geometry2, Fill = CosmosMaterials.Brush3};
+            var pathLetter2 = new Path {Data = geometry2, Fill = CosmosMaterials.Brush3};
 
             var canvas = this.view.overlay;
 
-            canvas.Children.Add(path);
-            Overlay.SetPosition3D(path, new Point3D(20, 10, 0));
+            canvas.Children.Add(pathLetter1);
+            canvas.Children.Add(pathLetter2);
 
-            canvas.Children.Add(path2);
-            Overlay.SetPosition3D(path2, new Point3D(20, 10, 0));
+            // Overlay.SetPosition3D(pathLetter1, new Point3D(20, 10, 0));
+            // Overlay.SetPosition3D(pathLetter2, new Point3D(20, 10, 0));
 
             var formulaControl = new FormulaControl
             {
@@ -163,34 +163,32 @@ namespace Lib.Cosmos.Scenes.ViewControllers
                 FontFamily = CosmosResources.LatexFont
             };
 
-
             // canvas.Children.Add(text);
             // Overlay.SetPosition3D(text, new Point3D(20, 10, 0));
 
             // canvas.Children.Add(formulaControl);
             // Overlay.SetPosition3D(formulaControl, new Point3D(10, 20, 0));
 
-
             BindingOperations.SetBinding(this.parallelogram, ParallelogramVisual3D.Point1Property, binding1);
             BindingOperations.SetBinding(this.parallelogram, ParallelogramVisual3D.Point2Property, binding2);
             BindingOperations.SetBinding(this.resultant, ArrowVisual3D.Point2Property, bindingResultant);
-            BindingOperations.SetBinding(path, Overlay.Position3DProperty, binding1);
-            BindingOperations.SetBinding(path2, Overlay.Position3DProperty, binding2);
+            BindingOperations.SetBinding(pathLetter1, Overlay.Position3DProperty, binding1);
+            BindingOperations.SetBinding(pathLetter2, Overlay.Position3DProperty, binding2);
         }
 
-        private async void IntroduceArrow1()
+        private Task IntroduceArrow1()
         {
             this.arrow1.Point1 = default(Point3D);
-            await this.arrow1.PointTo(new Point3D(30, 15, 0), TimeSpan.FromSeconds(0.5));
+            return this.arrow1.PointTo(new Point3D(30, 15, 0), TimeSpan.FromSeconds(0.5));
         }
 
-        private async void IntroduceArrow2()
+        private Task IntroduceArrow2()
         {
             this.arrow2.Point1 = default(Point3D);
-            await this.arrow2.PointTo(new Point3D(10, 25, 0), TimeSpan.FromSeconds(0.5));
+            return this.arrow2.PointTo(new Point3D(10, 25, 0), TimeSpan.FromSeconds(0.5));
         }
 
-        private async void MoveArrows()
+        private async Task MoveArrows()
         {
             Point3D[] points =
             {
@@ -219,10 +217,12 @@ namespace Lib.Cosmos.Scenes.ViewControllers
             this.oneForm.BeginAnimation(OneFormVisual3D.MagnitudeProperty, animation);
         }
 
-        private async void IntroduceArrows()
+        private async Task IntroduceArrows()
         {
             const int NumArrows = 17;
             const double Phase = 40;
+
+            Task[] tasks = new Task[NumArrows];
 
             var mtrix = Matrix3D.Identity;
             var quaternion = new Quaternion(new Vector3D(0, 0, 1), Phase);
@@ -254,10 +254,11 @@ namespace Lib.Cosmos.Scenes.ViewControllers
                 var point3D = new Point3D(x, y, 0);
                 point3D = mtrix.Transform(point3D);
 
-                var task = ellipseArrow.PointTo(point3D, TimeSpan.FromSeconds(0.5));
-
+                tasks[i] = ellipseArrow.PointTo(point3D, TimeSpan.FromSeconds(0.5));
                 await Task.Delay(TimeSpan.FromMilliseconds(60));
             }
+
+            await Task.WhenAll(tasks);
         }
 
         private void ToggleVisual(Visual3D visual, bool isChecked)
@@ -266,33 +267,6 @@ namespace Lib.Cosmos.Scenes.ViewControllers
                 this.view.MyViewPort.Children.InsertIfMissing(visual);
             else
                 this.view.MyViewPort.Children.RemoveIfPresent(visual);
-        }
-    }
-
-    public static class ArrowMoveExtensions
-    {
-        public static Task<ArrowVisual3D> PointTo(this ArrowVisual3D arrow, Point3D point)
-        {
-            return arrow.PointTo(point, TimeSpan.FromSeconds(1));
-        }
-
-        public static Task<ArrowVisual3D> PointTo(this ArrowVisual3D arrow, Point3D point, TimeSpan timeSpan)
-        {
-            var startPoint = arrow.Point2;
-
-            var pointAnimation2 = new Point3DAnimation(startPoint, point, new Duration(timeSpan))
-            {
-                AccelerationRatio = 0.3,
-                DecelerationRatio = 0.5,
-                FillBehavior = FillBehavior.HoldEnd,
-                AutoReverse = false
-            };
-
-            var tcs = new TaskCompletionSource<ArrowVisual3D>();
-            pointAnimation2.Completed += (s, e) => tcs.SetResult(arrow);
-            arrow.BeginAnimation(ArrowVisual3D.Point2Property, pointAnimation2);
-
-            return tcs.Task;
         }
     }
 }

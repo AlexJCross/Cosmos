@@ -27,10 +27,10 @@ namespace Lib.Cosmos.Scenes.ViewControllers
 
             return new List<ISceneClip>
             {
-                new SceneClip("Enter Black Hole", () =>
+                new AsyncSceneClip("Enter Black Hole", () =>
                 {
                     toggleBlackHole.Value = true;
-                    this.blackHole.EnterGrow();
+                    return this.blackHole.EnterGrow();
                 }),
                 toggleBlackHole
             };

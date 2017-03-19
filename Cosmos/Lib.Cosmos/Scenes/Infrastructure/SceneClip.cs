@@ -1,9 +1,8 @@
-﻿
-namespace Lib.Cosmos.Scenes.Infrastructure
+﻿namespace Lib.Cosmos.Scenes.Infrastructure
 {
-    using Prism.Commands;
     using System;
     using System.Windows.Input;
+    using Prism.Commands;
 
     public class SceneClip : ISceneClip
     {
@@ -13,8 +12,8 @@ namespace Lib.Cosmos.Scenes.Infrastructure
             this.Command = new DelegateCommand(clip);
         }
 
-        public string Text { get; }
-
         public ICommand Command { get; }
+
+        public string Text { get; }
     }
 }

@@ -41,25 +41,29 @@
                     this.CreateTangentSpace();
                     this.RotateTangentSpace();
                 }),
-                new SceneClip("Enter Polars", () =>
+                new AsyncSceneClip("Enter Polars", () =>
                 {
                     togglePolars.Value = true;
-                    this.view.MyTube.EnterGrow();
+                    return this.view.MyTube.EnterGrow();
                 }),
-                new SceneClip("Enter sphere", () =>
+                new AsyncSceneClip("Enter sphere", () =>
                 {
                     toggleSphericalMesh.Value = true;
-                    this.view.MySphericals.EnterGrow();
+                    return this.view.MySphericals.EnterGrow();
                 }),
-                new SceneClip("Enter Both", () =>
+                new AsyncSceneClip("Enter Both", () =>
                 {
                     togglePolars.Value = true;
                     toggleSphericalMesh.Value = true;
                     this.view.MyTube.EnterGrow();
-                    this.view.MySphericals.EnterGrow();
+                    return this.view.MySphericals.EnterGrow();
                 }),
-                new SceneClip("Exit sphere",
-                    () => { this.view.MySphericals.ExitShrink(() => toggleSphericalMesh.Value = false); }),
+                new AsyncSceneClip("Exit sphere",
+                    async () =>
+                    {
+                        await this.view.MySphericals.ExitGrow();
+                        toggleSphericalMesh.Value = false;
+                    }),
                 toggleMajorGrid,
                 toggleMinorGrid,
                 togglePhotonLines,

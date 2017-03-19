@@ -29,8 +29,14 @@
                                   IsChecked="{Binding Path=Value,
                                                       Mode=TwoWay}"/>
                 </DataTemplate>
-                
+
                 <DataTemplate DataType="{x:Type infra:SceneClip}">
+                    <Button Margin="0,0,5,5"
+                            Command="{Binding Path=Command}"
+                            Content="{Binding Path=Text}" />
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type infra:AsyncSceneClip}">
                     <Button Margin="0,0,5,5"
                             Command="{Binding Path=Command}"
                             Content="{Binding Path=Text}" />

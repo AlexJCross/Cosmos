@@ -1,6 +1,7 @@
 ﻿namespace Lib.Cosmos.Animation
 {
     using System;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Media.Animation;
     using System.Windows.Media.Media3D;
@@ -9,7 +10,7 @@
     {
         private const double Speed = 1000;
 
-        public static void EnterGrow(this ModelVisual3D modelVisual)
+        public static Task<TVisual> EnterGrow<TVisual>(this TVisual modelVisual)  where TVisual : ModelVisual3D
         {
             var scaleTransform = new ScaleTransform3D();
 
@@ -24,12 +25,21 @@
                 AutoReverse = false
             };
 
+            var tcs = new TaskCompletionSource<TVisual>();
+
+            growAnimation.Completed += (s, e) =>
+            {
+                tcs.TrySetResult(modelVisual);
+            };
+
             scaleTransform.BeginAnimation(ScaleTransform3D.ScaleXProperty, growAnimation);
             scaleTransform.BeginAnimation(ScaleTransform3D.ScaleYProperty, growAnimation);
             scaleTransform.BeginAnimation(ScaleTransform3D.ScaleZProperty, growAnimation);
+
+            return tcs.Task;
         }
 
-        public static void ExitShrink(this ModelVisual3D modelVisual, Action onExit)
+        public static Task<TVisual> ExitGrow<TVisual>(this TVisual modelVisual) where TVisual : ModelVisual3D
         {
             var scaleTransform = new ScaleTransform3D();
 
@@ -44,11 +54,18 @@
                 AutoReverse = false
             };
 
-            shrinkAnimation.Completed += (s, e) => onExit?.Invoke();
+            var tcs = new TaskCompletionSource<TVisual>();
+
+            shrinkAnimation.Completed += (s, e) =>
+            {
+                tcs.TrySetResult(modelVisual);
+            };
 
             scaleTransform.BeginAnimation(ScaleTransform3D.ScaleXProperty, shrinkAnimation);
             scaleTransform.BeginAnimation(ScaleTransform3D.ScaleYProperty, shrinkAnimation);
             scaleTransform.BeginAnimation(ScaleTransform3D.ScaleZProperty, shrinkAnimation);
+
+            return tcs.Task;
         }
     }
 }

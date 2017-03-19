@@ -95,11 +95,13 @@
     <Compile Include="Extensions\ViewportExtensions.cs" />
     <Compile Include="Extensions\Visual3DCollectionExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scenes\Infrastructure\AsyncSceneClip.cs" />
     <Compile Include="Scenes\Infrastructure\IScene.cs" />
     <Compile Include="Scenes\Infrastructure\ISceneClip.cs" />
     <Compile Include="Scenes\Infrastructure\Scene.cs" />
     <Compile Include="Scenes\Infrastructure\SceneClip.cs" />
     <Compile Include="Scenes\Infrastructure\ToggleSceneClip.cs" />
+    <Compile Include="Animation\ArrowMoveExtensions.cs" />
     <Compile Include="Scenes\ViewControllers\BlackHoleViewController.cs" />
     <Compile Include="Scenes\ViewControllers\LorentzViewController.cs" />
     <Compile Include="Scenes\ViewControllers\ISceneViewController.cs" />
@@ -135,6 +137,7 @@
     <Compile Include="Visual3Ds\LightConeVisual3D.cs" />
     <Compile Include="Visual3Ds\OneFormVisual3D.cs" />
     <Compile Include="Visual3Ds\ParallelogramVisual3D.cs" />
+    <Compile Include="Windows\AsyncCommand.cs" />
     <Compile Include="Windows\RegionNames.cs" />
     <Compile Include="Windows\SceneControl.cs" />
   </ItemGroup>
