@@ -134,6 +134,7 @@
       <DependentUpon>SceneClipsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Visual3Ds\FlatArrowVisual3D.cs" />
+    <Compile Include="Visual3Ds\LabelledArrowVisual3D.cs" />
     <Compile Include="Visual3Ds\LightConeVisual3D.cs" />
     <Compile Include="Visual3Ds\OneFormVisual3D.cs" />
     <Compile Include="Visual3Ds\ParallelogramVisual3D.cs" />

@@ -134,7 +134,7 @@
             var num = this.NumBars;
 
             var builder = new MeshBuilder(false, false);
-            const double XLength = 0.8;
+            const double XLength = 0.7;
 
             var scaledWidth = this.Width * UnitSeparation;
 
@@ -145,7 +145,7 @@
             if (num % 2 == 1)
             {
 
-                builder.AddBox(this.Origin, this.Direction, yDirection, 0.8, scaledWidth, this.Height);
+                builder.AddBox(this.Origin, this.Direction, yDirection, XLength, scaledWidth, this.Height);
 
                 this.AddArrowHead(builder, points, widthOffset);
                 this.AddArrowHead(builder, points, -widthOffset);
@@ -219,8 +219,8 @@
         private Point3D[] GetArrowHeadPoints(Vector3D displacement, Vector3D yDirection)
         {
             Vector3D heightDisplacement = this.Height / 2 * this.Normal;
-            Vector3D lengthDisplacement = displacement / 2;
-            double width = 2;
+            Vector3D lengthDisplacement = displacement / 3;
+            double width = 1.5;
 
             Point3D[] corners =
             {

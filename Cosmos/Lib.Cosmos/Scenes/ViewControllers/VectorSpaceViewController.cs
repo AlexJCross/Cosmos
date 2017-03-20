@@ -21,11 +21,13 @@ namespace Lib.Cosmos.Scenes.ViewControllers
     public class VectorSpaceViewController : ISceneViewController
     {
         private readonly VectorSpaceView view;
-        private ArrowVisual3D arrow1;
-        private ArrowVisual3D arrow2;
+        private LabelledArrowVisual3D arrow1;
+        private LabelledArrowVisual3D arrow2;
         private ParallelogramVisual3D parallelogram;
         private ArrowVisual3D resultant;
         private OneFormVisual3D oneForm;
+        private Path pathLetter1;
+        private Path pathLetter2;
 
         public VectorSpaceViewController(VectorSpaceView view)
         {
@@ -36,10 +38,18 @@ namespace Lib.Cosmos.Scenes.ViewControllers
         public IList<ISceneClip> CreateSceneClips()
         {
             var toggleArrow1 = new ToggleSceneClip("Arrow 1",
-                isChecked => { this.ToggleVisual(this.arrow1, isChecked); });
+                isChecked =>
+                {
+                    this.ToggleVisual(this.arrow1, isChecked);
+                    this.pathLetter1.Visibility = isChecked ? Visibility.Visible : Visibility.Collapsed;
+                });
 
             var toggleArrow2 = new ToggleSceneClip("Arrow 2",
-                isChecked => { this.ToggleVisual(this.arrow2, isChecked); });
+                isChecked =>
+                {
+                    this.ToggleVisual(this.arrow2, isChecked);
+                    this.pathLetter2.Visibility = isChecked ? Visibility.Visible : Visibility.Collapsed;
+                });
 
             var toggleResultant = new ToggleSceneClip("Resultant",
                 isChecked => { this.ToggleVisual(this.resultant, isChecked); });
@@ -75,16 +85,26 @@ namespace Lib.Cosmos.Scenes.ViewControllers
 
         private void Initialize()
         {
-            this.arrow1 = new ArrowVisual3D
+            Visual3D sphere = new SphereVisual3D
             {
-                Material = CosmosMaterials.Material4,
-                Diameter = 0.8
+                Radius = 0.41,
+                Material = CosmosMaterials.Material2
             };
 
-            this.arrow2 = new ArrowVisual3D
+            this.view.MyViewPort.Children.AddIfMissing(sphere);
+
+            this.arrow1 = new LabelledArrowVisual3D()
+            {
+                Material = CosmosMaterials.Material4,
+                Diameter = 0.8,
+                LabelPosition = LabelPosition.Right
+            };
+
+            this.arrow2 = new LabelledArrowVisual3D()
             {
                 Material = CosmosMaterials.Material3,
-                Diameter = 0.8
+                Diameter = 0.8,
+                LabelPosition = LabelPosition.Left,
             };
 
             this.resultant = new ArrowVisual3D
@@ -120,6 +140,16 @@ namespace Lib.Cosmos.Scenes.ViewControllers
                 Source = this.arrow2
             };
 
+            var textBinding2 = new Binding("TextPoint")
+            {
+                Source = this.arrow2
+            };
+
+            var textBinding1 = new Binding("TextPoint")
+            {
+                Source = this.arrow1
+            };
+
             var bindingResultant = new Binding("ResultantPoint3D")
             {
                 Source = this.parallelogram
@@ -141,17 +171,17 @@ namespace Lib.Cosmos.Scenes.ViewControllers
 
             // formula.SetForeground(Brushes.Green);
             var renderer = formula1.GetRenderer(TexStyle.Display, 48);
-            var geometry = renderer.RenderToGeometry(20, 40);
-            var pathLetter1 = new Path {Data = geometry, Fill = CosmosMaterials.Brush4};
+            var geometry = renderer.RenderToGeometry(0, 0);
+            this.pathLetter1 = new Path {Data = geometry, Fill = CosmosMaterials.Brush4};
 
             var renderer2 = formula2.GetRenderer(TexStyle.Display, 48);
-            var geometry2 = renderer2.RenderToGeometry(20, 40);
-            var pathLetter2 = new Path {Data = geometry2, Fill = CosmosMaterials.Brush3};
+            var geometry2 = renderer2.RenderToGeometry(0, 0);
+            this.pathLetter2 = new Path {Data = geometry2, Fill = CosmosMaterials.Brush3};
 
             var canvas = this.view.overlay;
 
-            canvas.Children.Add(pathLetter1);
-            canvas.Children.Add(pathLetter2);
+            canvas.Children.Add(this.pathLetter1);
+            canvas.Children.Add(this.pathLetter2);
 
             // Overlay.SetPosition3D(pathLetter1, new Point3D(20, 10, 0));
             // Overlay.SetPosition3D(pathLetter2, new Point3D(20, 10, 0));
@@ -172,8 +202,8 @@ namespace Lib.Cosmos.Scenes.ViewControllers
             BindingOperations.SetBinding(this.parallelogram, ParallelogramVisual3D.Point1Property, binding1);
             BindingOperations.SetBinding(this.parallelogram, ParallelogramVisual3D.Point2Property, binding2);
             BindingOperations.SetBinding(this.resultant, ArrowVisual3D.Point2Property, bindingResultant);
-            BindingOperations.SetBinding(pathLetter1, Overlay.Position3DProperty, binding1);
-            BindingOperations.SetBinding(pathLetter2, Overlay.Position3DProperty, binding2);
+            BindingOperations.SetBinding(this.pathLetter1, Overlay.Position3DProperty, textBinding1);
+            BindingOperations.SetBinding(this.pathLetter2, Overlay.Position3DProperty, textBinding2);
         }
 
         private Task IntroduceArrow1()
@@ -192,8 +222,8 @@ namespace Lib.Cosmos.Scenes.ViewControllers
         {
             Point3D[] points =
             {
-                new Point3D(-10, 15, 0), new Point3D(-10, -15, 0), new Point3D(25, -5, 0),
-                new Point3D(-10, 15, 0)
+                new Point3D(-20, 15, 0), new Point3D(-5, -25, 0), new Point3D(-25, -5, 0),
+                new Point3D(-20, 15, 0)
             };
 
             for (var i = 0; i < points.Length; i++)

@@ -2,15 +2,14 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:Lib.Cosmos.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:windows="clr-namespace:Lib.Cosmos.Windows"
              xmlns:vms="clr-namespace:Lib.Cosmos.ViewModels"
+             xmlns:windows="clr-namespace:Lib.Cosmos.Windows"
              d:DataContext="{d:DesignInstance Type=vms:MasterDetailViewModel}"
              d:DesignHeight="300"
              d:DesignWidth="300"
+             prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d">
 
     <Grid>
@@ -20,18 +19,26 @@
 
         </Grid.ColumnDefinitions>
 
-        <DockPanel Grid.Column="0">
-            <Button Content="Hello" DockPanel.Dock="Top" />
-            
+        <DockPanel Grid.Column="0" Margin="5">
+            <StackPanel Margin="0,0,0,10" DockPanel.Dock="Top">
+                <TextBlock FontWeight="Bold" Text="Episode" />
+                <TextBlock>
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0}.{1}) {2}">
+                            <Binding Path="Scene.Episode" />
+                            <Binding Path="Scene.Order" />
+                            <Binding Path="Scene.Name" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </StackPanel>
+
             <ListBox x:Name="ListBoxEpisodes"
                      DisplayMemberPath="Name"
                      ItemsSource="{Binding Path=Scenes}"
                      SelectedItem="{Binding Path=Scene}" />
         </DockPanel>
 
-        <DockPanel Grid.Column="1">
-            <Label DockPanel.Dock="Top" Content="{Binding Path=Scene.Name}" />
-            <ContentControl prism:RegionManager.RegionName="{x:Static windows:RegionNames.DetailRegion}" />
-        </DockPanel>
+        <ContentControl Grid.Column="1" prism:RegionManager.RegionName="{x:Static windows:RegionNames.DetailRegion}" />
     </Grid>
 </UserControl>

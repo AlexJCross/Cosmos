@@ -5,7 +5,9 @@
     {
         public MasterDetailView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
+
+            this.Loaded += (sender, args) => this.ListBoxEpisodes.SelectedItem = this.ListBoxEpisodes.Items[0];
         }
     }
 }

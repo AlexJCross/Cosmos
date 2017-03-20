@@ -17,7 +17,7 @@
 
         public MasterDetailViewModel(IRegionManager regionMangager, IScene[] scenes)
         {
-            this.scenes = scenes;
+            this.scenes = scenes.OrderBy(s => s.Episode).ThenBy(s => s.Order).ToArray();
             this.regionMangager = regionMangager;
         }
 
@@ -49,7 +49,6 @@
             this.ValidateMemoryClearance();
 
             var region = this.regionMangager.Regions[RegionNames.DetailRegion];
-
             
             this.regionMangager.RegisterViewWithRegion(RegionNames.DetailRegion, this.scene.ViewType);
             region.RequestNavigate(this.scene.ViewType.Name);
